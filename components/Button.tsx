@@ -15,6 +15,7 @@ const ButtonStyle = styled.button`
 
   &:hover {
     border-radius: 8px;
+    background-color: #efefef;
   }
 
   & + & {

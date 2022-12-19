@@ -56,6 +56,11 @@ export default function Home() {
           >
             Scroll Y Progress
           </Button>
+          <Button
+            handleClick={() => router.push("/framer-motion/scroll-animation")}
+          >
+            Scroll Y Animation
+          </Button>
         </Block>
       </Layout>
     </>
