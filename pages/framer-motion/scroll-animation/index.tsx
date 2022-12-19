@@ -67,16 +67,16 @@ const Sample = () => {
 
   return (
     <Layout title="Count">
-      <Tooltip top="450px" left="400px">
+      <Tooltip>
         <Button handleClick={() => setHiddenStatusFlag(!hiddenStatusFlag)}>
-          현재 상태: {hiddenStatusFlag ? "ON" : "OFF"}
+          현태 상태: {hiddenStatusFlag ? "ON" : "OFF"}
         </Button>
         <p>
-          * 현재 상태가 <span className="blue">ON</span> 일 경우엔 스크롤을
+          * 위의 버튼을 클릭시 상태가 바뀝니다.
+          <br />* 상태가 <span className="blue">ON</span> 일 경우엔 스크롤을
           올렸을 때도 Fade 효과가 나타남.
-          <br />* <span className="red">OFF</span> 일 경우엔 스크롤 올렸을 때는
-          Fade 효과가 없음.
-          <br />* 위의 버튼을 클릭시 상태가 바뀝니다.
+          <br />* 상태가 <span className="red">OFF</span> 일 경우엔 스크롤
+          올렸을 때는 Fade 효과가 없음.
         </p>
       </Tooltip>
       <Box num={1} hiddenStatusFlag={hiddenStatusFlag} />

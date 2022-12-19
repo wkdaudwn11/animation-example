@@ -7,18 +7,16 @@ import Layout from "../components/Layout";
 import Button from "../components/Button";
 
 const Block = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100%;
   text-align: center;
 
-  button + button {
-    margin-left: 12px;
-  }
-
   & + & {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 3px solid black;
+    margin-top: 30px;
+    padding-top: 30px;
   }
 `;
 
@@ -41,25 +39,30 @@ export default function Home() {
       </Head>
       <Layout title="Home">
         <Block>
-          <BlockTitle>react-spring</BlockTitle>
+          <BlockTitle>Count</BlockTitle>
           <Button handleClick={() => router.push("/react-spring/count")}>
-            Count Sample
-          </Button>
-          <Button handleClick={() => router.push("/react-spring/fade")}>
-            Fade Sample
+            Count (react-spring)
           </Button>
         </Block>
+
         <Block>
-          <BlockTitle>framer-motion</BlockTitle>
+          <BlockTitle>Fade</BlockTitle>
+          <Button handleClick={() => router.push("/react-spring/fade")}>
+            Fade Sample (react-spring)
+          </Button>
+        </Block>
+
+        <Block>
+          <BlockTitle>Scroll</BlockTitle>
           <Button
             handleClick={() => router.push("/framer-motion/scroll-y-progress")}
           >
-            Scroll Y Progress
+            Scroll Y Progress (framer-motion)
           </Button>
           <Button
             handleClick={() => router.push("/framer-motion/scroll-animation")}
           >
-            Scroll Y Animation
+            Scroll Y Animation (framer-motion)
           </Button>
         </Block>
       </Layout>

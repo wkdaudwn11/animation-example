@@ -22,7 +22,7 @@ const Contents = styled.div`
   width: 100%;
   max-width: 1024px;
   min-height: 100vh;
-  padding-top: 80px;
+  padding: 80px 20px 0 20px;
   margin: 0 auto;
 `;
 

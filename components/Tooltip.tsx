@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
 
-const Block = styled.div<{ top: string; left: string }>`
+const Block = styled.div`
   position: fixed;
-  top: ${({ top }) => top};
-  left: ${({ left }) => left};
+  top: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  width: 100%;
   padding: 20px 20px 10px 20px;
   z-index: 1;
   background-color: #ffffff;
@@ -32,16 +32,10 @@ const Block = styled.div<{ top: string; left: string }>`
 
 type Props = {
   children: React.ReactNode;
-  top: string;
-  left: string;
 };
 
-const Tooltip = ({ children, top, left }: Props) => {
-  return (
-    <Block top={top} left={left}>
-      {children}
-    </Block>
-  );
+const Tooltip = ({ children }: Props) => {
+  return <Block>{children}</Block>;
 };
 
 export default Tooltip;
