@@ -13,6 +13,7 @@ const Container = styled.div`
   width: 100%;
   height: 80px;
   background-color: #ffffff;
+  z-index: 10;
 `;
 
 const InnerContainer = styled.div<{ isHome: boolean }>`
