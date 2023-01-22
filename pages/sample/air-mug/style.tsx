@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { css } from "@emotion/react";
 
 export const Container = styled.div`
   overflow-x: hidden;
@@ -20,6 +21,7 @@ export const Container = styled.div`
 
 export const GlobalNav = styled.nav`
   height: 44px;
+  padding: 0 1rem;
 `;
 
 const NavLinks = styled.div`
@@ -40,6 +42,7 @@ export const GlobalNavLinks = styled(NavLinks)`
 
 export const LocalNav = styled.nav`
   height: 52px;
+  padding: 0 1rem;
   border-bottom: 1px solid #ddd;
 `;
 
@@ -56,4 +59,149 @@ export const LocalNavLinks = styled(NavLinks)`
     margin-left: 2em;
     font-size: 0.8rem;
   }
+`;
+
+export const ScrollSection = styled.section<{ sectionId: number }>`
+  padding-top: 50vh;
+
+  ${({ sectionId }) =>
+    sectionId === 0 &&
+    css`
+      h1 {
+        font-size: 4rem;
+        text-align: center;
+
+        @media (min-width: 1024px) {
+          font-size: 9vw;
+        }
+      }
+    `};
+
+  ${({ sectionId }) =>
+    sectionId === 1 &&
+    css`
+      p.description {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        font-size: 1.2rem;
+        color: #888;
+
+        strong {
+          margin-right: 0.8rem;
+          font-size: 2.5rem;
+          color: rgb(29, 29, 31);
+          float: left;
+        }
+
+        @media (min-width: 1024px) {
+          font-size: 2rem;
+
+          strong {
+            font-size: 6rem;
+          }
+        }
+      }
+    `};
+
+  ${({ sectionId }) =>
+    sectionId === 3 &&
+    css`
+      p.mid-message {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        font-size: 2rem;
+        color: #888;
+
+        strong {
+          color: rgb(29, 29, 31);
+        }
+
+        @media (min-width: 1024px) {
+          font-size: 4vw;
+        }
+      }
+
+      p.canvas-caption {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        font-size: 1.2rem;
+        color: #888;
+
+        @media (min-width: 1024px) {
+          font-size: 2rem;
+        }
+      }
+    `};
+`;
+
+export const StickyBox = styled.div<{ stickyId: number }>`
+  &.main-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3em;
+    margin: 3px 0;
+    font-size: 2.5rem;
+
+    p {
+      font-weight: bold;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    small {
+      display: block;
+      margin-bottom: 0.5em;
+      font-size: 1.2rem;
+    }
+
+    @media (min-width: 1024px) {
+      font-size: 4vw;
+    }
+  }
+
+  ${({ stickyId }) =>
+    stickyId === 1 &&
+    css`
+      &.main-message {
+        font-size: 3.5rem;
+      }
+
+      &.desc-message {
+        width: 50%;
+        font-weight: bold;
+      }
+
+      .pin {
+        width: 1px;
+        height: 100px;
+        background-color: rgb(29, 29, 31);
+      }
+
+      @media (min-width: 1024px) {
+        &.main-message {
+          font-size: 6vw;
+
+          small {
+            font-size: 1.5vw;
+          }
+        }
+
+        &.desc-message {
+          width: 20%;
+        }
+      }
+    `};
+`;
+
+export const Footer = styled.footer`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 7rem;
+  color: white;
+  background: darkorange;
 `;
