@@ -3,7 +3,68 @@ import { useEffect } from "react";
 import Nav from "./Nav";
 import * as S from "./style";
 
+type Scene = {
+  type: "animation" | "normal";
+  heightNum: number;
+  scrollHeight: number;
+  objects: {
+    container: HTMLElement | null;
+  };
+};
+
 const AirMug = () => {
+  const setLayout = (sceneList: Scene[]) => {
+    sceneList.forEach((scene) => {
+      scene.scrollHeight = scene.heightNum * window.innerHeight;
+      if (scene.objects.container) {
+        scene.objects.container.style.height = `${scene.scrollHeight}px`;
+      }
+    });
+
+    console.log("setLayout >", sceneList);
+  };
+
+  useEffect(() => {
+    const sceneList: Scene[] = [
+      {
+        type: "animation",
+        heightNum: 5,
+        scrollHeight: 0,
+        objects: {
+          container: document.querySelector("#scroll-section-0"),
+        },
+      },
+      {
+        type: "normal",
+        heightNum: 5,
+        scrollHeight: 0,
+        objects: {
+          container: document.querySelector("#scroll-section-1"),
+        },
+      },
+      {
+        type: "animation",
+        heightNum: 5,
+        scrollHeight: 0,
+        objects: {
+          container: document.querySelector("#scroll-section-2"),
+        },
+      },
+      {
+        type: "animation",
+        heightNum: 5,
+        scrollHeight: 0,
+        objects: {
+          container: document.querySelector("#scroll-section-3"),
+        },
+      },
+    ];
+
+    setLayout(sceneList);
+
+    window.addEventListener("resize", () => setLayout(sceneList));
+  }, []);
+
   return (
     <S.Container>
       <Nav />
