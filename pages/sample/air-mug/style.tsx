@@ -17,6 +17,13 @@ export const Container = styled.div`
     color: rgb(29, 29, 31);
     text-decoration: none;
   }
+
+  &#show-scene-0 #scroll-section-0 .sticky,
+  &#show-scene-1 #scroll-section-1 .sticky,
+  &#show-scene-2 #scroll-section-2 .sticky,
+  &#show-scene-3 #scroll-section-3 .sticky {
+    display: flex;
+  }
 `;
 
 export const GlobalNav = styled.nav`
@@ -138,8 +145,13 @@ export const ScrollSection = styled.section<{ sectionId: number }>`
 `;
 
 export const StickyBox = styled.div<{ stickyId: number }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+
   &.main-message {
-    display: flex;
     align-items: center;
     justify-content: center;
     height: 3em;

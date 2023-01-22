@@ -1,38 +1,32 @@
-import { useRef } from "react";
-import Link from "next/link";
+import { useEffect } from "react";
 
 import Nav from "./Nav";
 import * as S from "./style";
 
 const AirMug = () => {
-  const scrollSectionRef01 = useRef<HTMLDivElement>(null);
-  const scrollSectionRef02 = useRef<HTMLDivElement>(null);
-  const scrollSectionRef03 = useRef<HTMLDivElement>(null);
-  const scrollSectionRef04 = useRef<HTMLDivElement>(null);
-
   return (
     <S.Container>
       <Nav />
-      <S.ScrollSection ref={scrollSectionRef01} sectionId={0}>
+      <S.ScrollSection id="scroll-section-0" sectionId={0}>
         <h1>AirMug Pro</h1>
-        <S.StickyBox stickyId={0} className="main-message">
+        <S.StickyBox stickyId={0} className="sticky main-message">
           <p>
             온전히 빠져들게 하는
             <br />
             최고급 세라믹
           </p>
         </S.StickyBox>
-        <S.StickyBox stickyId={0} className="main-message">
+        <S.StickyBox stickyId={0} className="sticky main-message">
           <p>주변 맛을 느끼게 해주는 주변 맛 허용 모드</p>
         </S.StickyBox>
-        <S.StickyBox stickyId={0} className="main-message">
+        <S.StickyBox stickyId={0} className="sticky main-message">
           <p>
             온종일 편안한
             <br />
             맞춤형 손잡이
           </p>
         </S.StickyBox>
-        <S.StickyBox stickyId={0} className="main-message">
+        <S.StickyBox stickyId={0} className="sticky ain-message">
           <p>
             새롭게 입가를
             <br />
@@ -40,7 +34,7 @@ const AirMug = () => {
           </p>
         </S.StickyBox>
       </S.ScrollSection>
-      <S.ScrollSection ref={scrollSectionRef02} sectionId={1}>
+      <S.ScrollSection id="scroll-section-1" sectionId={1}>
         <p className="description">
           <strong>보통 스크롤 영역</strong>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic voluptas
@@ -67,14 +61,14 @@ const AirMug = () => {
           doloribus vel sapiente excepturi ratione reprehenderit numquam?
         </p>
       </S.ScrollSection>
-      <S.ScrollSection ref={scrollSectionRef03} sectionId={2}>
-        <S.StickyBox stickyId={1} className="main-message">
+      <S.ScrollSection id="scroll-section-2" sectionId={2}>
+        <S.StickyBox stickyId={1} className="sticky main-message">
           <p>
             <small>편안한 촉감</small>
             입과 하나 되다
           </p>
         </S.StickyBox>
-        <S.StickyBox stickyId={1} className="desc-message">
+        <S.StickyBox stickyId={1} className="sticky desc-message">
           <p>
             편안함 목넘김을 완성하는 디테일한 여러 구성 요소들, 우리는 이를
             하나하나 새롭게 살피고 재구성하는 과정을 거쳐 새로운 수준의 머그,
@@ -83,7 +77,7 @@ const AirMug = () => {
           </p>
           <div className="pin" />
         </S.StickyBox>
-        <S.StickyBox stickyId={1} className="desc-message">
+        <S.StickyBox stickyId={1} className="sticky desc-message">
           <p>
             디자인 앤 퀄리티 오브 스웨덴,
             <br />
@@ -92,7 +86,7 @@ const AirMug = () => {
           <div className="pin" />
         </S.StickyBox>
       </S.ScrollSection>
-      <S.ScrollSection ref={scrollSectionRef04} sectionId={3}>
+      <S.ScrollSection id="scroll-section-3" sectionId={3}>
         <p className="mid-message">
           <strong>Retina 머그</strong>
           <br />
