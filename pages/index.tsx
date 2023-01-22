@@ -39,6 +39,12 @@ export default function Home() {
       </Head>
       <Layout title="Home">
         <Block>
+          <BlockTitle>Sample Site</BlockTitle>
+          <Button handleClick={() => router.push("/sample/air-mug")}>
+            Air mug
+          </Button>
+        </Block>
+        <Block>
           <BlockTitle>Count</BlockTitle>
           <Button handleClick={() => router.push("/react-spring/count")}>
             Count (react-spring)
