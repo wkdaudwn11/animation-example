@@ -78,6 +78,7 @@ export const LocalNavLinks = styled(NavLinks)`
 
 export const ScrollSection = styled.section<{ sectionId: number }>`
   padding-top: 50vh;
+  border: 3px solid red;
 
   ${({ sectionId }) =>
     sectionId === 0 &&
@@ -197,9 +198,22 @@ export const StickyBox = styled.div<{ stickyId: number }>`
       }
 
       .pin {
+        position: absolute;
         width: 1px;
         height: 100px;
         background-color: rgb(29, 29, 31);
+        left: 0;
+        bottom: -100px;
+      }
+
+      &.b {
+        top: 10%;
+        left: 40%;
+      }
+
+      &.c {
+        top: 15%;
+        left: 45%;
       }
 
       @media (min-width: 1024px) {
@@ -213,6 +227,15 @@ export const StickyBox = styled.div<{ stickyId: number }>`
 
         &.desc-message {
           width: 20%;
+        }
+
+        &.b {
+          top: 20%;
+          left: 53%;
+        }
+
+        &.c {
+          left: 55%;
         }
       }
     `};

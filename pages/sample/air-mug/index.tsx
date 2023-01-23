@@ -9,17 +9,37 @@ type Scene = {
   scrollHeight: number;
   objects: {
     container: HTMLElement | null;
-    messageA: HTMLElement | null;
-    messageB: HTMLElement | null;
-    messageC: HTMLElement | null;
-    messageD: HTMLElement | null;
+    messageA?: HTMLElement | null;
+    messageB?: HTMLElement | null;
+    messageC?: HTMLElement | null;
+    messageD?: HTMLElement | null;
+    pinB?: HTMLElement | null;
+    pinC?: HTMLElement | null;
+    canvasCaption?: HTMLElement | null;
   };
-  values: {
-    messageA_opacityIn: any[];
-    messageA_opacityOut: any[];
-    messageA_translateY_in: any[];
-    messageA_translateY_out: any[];
-    messageB_opacityIn: any[];
+  values?: {
+    messageA_opacityIn?: any[];
+    messageB_opacityIn?: any[];
+    messageC_opacityIn?: any[];
+    messageD_opacityIn?: any[];
+    messageA_translateY_in?: any[];
+    messageB_translateY_in?: any[];
+    messageC_translateY_in?: any[];
+    messageD_translateY_in?: any[];
+    messageA_opacityOut?: any[];
+    messageB_opacityOut?: any[];
+    messageC_opacityOut?: any[];
+    messageD_opacityOut?: any[];
+    messageA_translateY_out?: any[];
+    messageB_translateY_out?: any[];
+    messageC_translateY_out?: any[];
+    messageD_translateY_out?: any[];
+    pinB_scaleY?: any[];
+    pinC_scaleY?: any[];
+    pinB_opacityIn?: any[];
+    pinC_opacityIn?: any[];
+    pinB_opacityOut?: any[];
+    pinC_opacityOut?: any[];
   };
 };
 
@@ -42,42 +62,42 @@ const AirMug = () => {
             container: document.querySelector("#scroll-section-0"),
             messageA: document.querySelector(
               "#scroll-section-0 .main-message.a"
-            ),
+            ) as HTMLElement,
             messageB: document.querySelector(
               "#scroll-section-0 .main-message.b"
-            ),
+            ) as HTMLElement,
             messageC: document.querySelector(
               "#scroll-section-0 .main-message.c"
-            ),
+            ) as HTMLElement,
             messageD: document.querySelector(
               "#scroll-section-0 .main-message.d"
-            ),
+            ) as HTMLElement,
           },
           values: {
             messageA_opacityIn: [0, 1, { start: 0.1, end: 0.2 }],
-            messageA_opacityOut: [1, 0, { start: 0.25, end: 0.3 }],
-            messageA_translateY_in: [20, 0, { start: 0.1, end: 0.2 }],
-            messageA_translateY_out: [0, -20, { start: 0.25, end: 0.3 }],
             messageB_opacityIn: [0, 1, { start: 0.3, end: 0.4 }],
+            messageC_opacityIn: [0, 1, { start: 0.5, end: 0.6 }],
+            messageD_opacityIn: [0, 1, { start: 0.7, end: 0.8 }],
+            messageA_translateY_in: [20, 0, { start: 0.1, end: 0.2 }],
+            messageB_translateY_in: [20, 0, { start: 0.3, end: 0.4 }],
+            messageC_translateY_in: [20, 0, { start: 0.5, end: 0.6 }],
+            messageD_translateY_in: [20, 0, { start: 0.7, end: 0.8 }],
+            messageA_opacityOut: [1, 0, { start: 0.25, end: 0.3 }],
+            messageB_opacityOut: [1, 0, { start: 0.45, end: 0.5 }],
+            messageC_opacityOut: [1, 0, { start: 0.65, end: 0.7 }],
+            messageD_opacityOut: [1, 0, { start: 0.85, end: 0.9 }],
+            messageA_translateY_out: [0, -20, { start: 0.25, end: 0.3 }],
+            messageB_translateY_out: [0, -20, { start: 0.45, end: 0.5 }],
+            messageC_translateY_out: [0, -20, { start: 0.65, end: 0.7 }],
+            messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
           },
         },
         {
           type: "normal",
-          heightNum: 5,
+          heightNum: 1,
           scrollHeight: 0,
           objects: {
             container: document.querySelector("#scroll-section-1"),
-            messageA: null,
-            messageB: null,
-            messageC: null,
-            messageD: null,
-          },
-          values: {
-            messageA_opacityIn: [],
-            messageA_opacityOut: [],
-            messageA_translateY_in: [],
-            messageA_translateY_out: [],
-            messageB_opacityIn: [],
           },
         },
         {
@@ -86,17 +106,41 @@ const AirMug = () => {
           scrollHeight: 0,
           objects: {
             container: document.querySelector("#scroll-section-2"),
-            messageA: null,
-            messageB: null,
-            messageC: null,
-            messageD: null,
+            messageA: document.querySelector(
+              "#scroll-section-2 .a"
+            ) as HTMLElement,
+            messageB: document.querySelector(
+              "#scroll-section-2 .b"
+            ) as HTMLElement,
+            messageC: document.querySelector(
+              "#scroll-section-2 .c"
+            ) as HTMLElement,
+            pinB: document.querySelector(
+              "#scroll-section-2 .b .pin"
+            ) as HTMLElement,
+            pinC: document.querySelector(
+              "#scroll-section-2 .c .pin"
+            ) as HTMLElement,
           },
           values: {
-            messageA_opacityIn: [],
-            messageA_opacityOut: [],
-            messageA_translateY_in: [],
-            messageA_translateY_out: [],
-            messageB_opacityIn: [],
+            messageA_translateY_in: [20, 0, { start: 0.15, end: 0.2 }],
+            messageB_translateY_in: [30, 0, { start: 0.5, end: 0.55 }],
+            messageC_translateY_in: [30, 0, { start: 0.72, end: 0.77 }],
+            messageA_opacityIn: [0, 1, { start: 0.15, end: 0.2 }],
+            messageB_opacityIn: [0, 1, { start: 0.5, end: 0.55 }],
+            messageC_opacityIn: [0, 1, { start: 0.72, end: 0.77 }],
+            messageA_translateY_out: [0, -20, { start: 0.3, end: 0.35 }],
+            messageB_translateY_out: [0, -20, { start: 0.58, end: 0.63 }],
+            messageC_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
+            messageA_opacityOut: [1, 0, { start: 0.3, end: 0.35 }],
+            messageB_opacityOut: [1, 0, { start: 0.58, end: 0.63 }],
+            messageC_opacityOut: [1, 0, { start: 0.85, end: 0.9 }],
+            pinB_scaleY: [0.5, 1, { start: 0.5, end: 0.55 }],
+            pinC_scaleY: [0.5, 1, { start: 0.72, end: 0.77 }],
+            pinB_opacityIn: [0, 1, { start: 0.5, end: 0.55 }],
+            pinC_opacityIn: [0, 1, { start: 0.72, end: 0.77 }],
+            pinB_opacityOut: [1, 0, { start: 0.58, end: 0.63 }],
+            pinC_opacityOut: [1, 0, { start: 0.85, end: 0.9 }],
           },
         },
         {
@@ -105,17 +149,9 @@ const AirMug = () => {
           scrollHeight: 0,
           objects: {
             container: document.querySelector("#scroll-section-3"),
-            messageA: null,
-            messageB: null,
-            messageC: null,
-            messageD: null,
-          },
-          values: {
-            messageA_opacityIn: [],
-            messageA_opacityOut: [],
-            messageA_translateY_in: [],
-            messageA_translateY_out: [],
-            messageB_opacityIn: [],
+            canvasCaption: document.querySelector(
+              ".canvas-caption"
+            ) as HTMLElement,
           },
         },
       ];
@@ -127,8 +163,12 @@ const AirMug = () => {
         let totalScrollHeight = 0;
 
         sceneList.forEach((scene) => {
-          scene.scrollHeight = scene.heightNum * window.innerHeight;
           if (scene.objects.container) {
+            if (scene.type === "animation") {
+              scene.scrollHeight = scene.heightNum * window.innerHeight;
+            } else if (scene.type === "normal") {
+              scene.scrollHeight = scene.objects.container.offsetHeight;
+            }
             scene.objects.container.style.height = `${scene.scrollHeight}px`;
           }
         });
@@ -190,45 +230,225 @@ const AirMug = () => {
 
         switch (currentScene) {
           case 0:
-            if (objects.messageA) {
-              const messageA_opacityIn = animationCalcValues(
-                values.messageA_opacityIn,
-                currentYOffset
-              );
-              const messageA_opacityOut = animationCalcValues(
-                values.messageA_opacityOut,
-                currentYOffset
-              );
-
-              const messageA_translateY_in = animationCalcValues(
-                values.messageA_translateY_in,
-                currentYOffset
-              );
-              const messageA_translateY_out = animationCalcValues(
-                values.messageA_translateY_out,
-                currentYOffset
-              );
-
-              const intersection =
+            if (
+              objects.messageA &&
+              objects.messageB &&
+              objects.messageC &&
+              objects.messageD &&
+              values.messageA_opacityIn &&
+              values.messageA_opacityOut &&
+              values.messageA_translateY_out &&
+              values.messageB_opacityIn &&
+              values.messageB_opacityOut &&
+              values.messageB_translateY_in &&
+              values.messageB_translateY_out &&
+              values.messageC_opacityIn &&
+              values.messageC_opacityOut &&
+              values.messageC_translateY_in &&
+              values.messageC_translateY_out &&
+              values.messageD_opacityIn &&
+              values.messageD_opacityOut &&
+              values.messageD_translateY_in &&
+              values.messageD_translateY_out
+            ) {
+              const intersection01 =
                 (values.messageA_opacityIn[2].end +
                   values.messageA_opacityOut[2].start) /
                 2;
+              const intersection02 =
+                (values.messageB_opacityIn[2].end +
+                  values.messageB_opacityOut[2].start) /
+                2;
+              const intersection03 =
+                (values.messageC_opacityIn[2].end +
+                  values.messageC_opacityOut[2].start) /
+                2;
 
-              if (scrollRatio <= intersection) {
-                objects.messageA.style.opacity = messageA_opacityIn.toString();
-                objects.messageA.style.transform = `translateY(${messageA_translateY_in}%)`;
+              const intersection04 =
+                (values.messageD_opacityIn[2].end +
+                  values.messageD_opacityOut[2].start) /
+                2;
+
+              if (scrollRatio <= intersection01) {
+                objects.messageA.style.opacity = animationCalcValues(
+                  values.messageA_opacityIn,
+                  currentYOffset
+                ).toString();
+                objects.messageA.style.transform = `translateY(${animationCalcValues(
+                  values.messageA_opacityOut,
+                  currentYOffset
+                )}%)`;
               } else {
-                objects.messageA.style.opacity = messageA_opacityOut.toString();
-                objects.messageA.style.transform = `translateY(${messageA_translateY_out}%)`;
+                objects.messageA.style.opacity = animationCalcValues(
+                  values.messageA_opacityOut,
+                  currentYOffset
+                ).toString();
+                objects.messageA.style.transform = `translateY(${animationCalcValues(
+                  values.messageA_translateY_out,
+                  currentYOffset
+                )}%)`;
+              }
+
+              if (scrollRatio <= intersection02) {
+                objects.messageB.style.opacity = animationCalcValues(
+                  values.messageB_opacityIn,
+                  currentYOffset
+                );
+                objects.messageB.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageB_translateY_in,
+                  currentYOffset
+                )}%, 0)`;
+              } else {
+                objects.messageB.style.opacity = animationCalcValues(
+                  values.messageB_opacityOut,
+                  currentYOffset
+                );
+                objects.messageB.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageB_translateY_out,
+                  currentYOffset
+                )}%, 0)`;
+              }
+
+              if (scrollRatio <= intersection03) {
+                objects.messageC.style.opacity = animationCalcValues(
+                  values.messageC_opacityIn,
+                  currentYOffset
+                );
+                objects.messageC.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageC_translateY_in,
+                  currentYOffset
+                )}%, 0)`;
+              } else {
+                objects.messageC.style.opacity = animationCalcValues(
+                  values.messageC_opacityOut,
+                  currentYOffset
+                );
+                objects.messageC.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageC_translateY_out,
+                  currentYOffset
+                )}%, 0)`;
+              }
+
+              if (scrollRatio <= intersection04) {
+                objects.messageD.style.opacity = animationCalcValues(
+                  values.messageD_opacityIn,
+                  currentYOffset
+                );
+                objects.messageD.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageD_translateY_in,
+                  currentYOffset
+                )}%, 0)`;
+              } else {
+                objects.messageD.style.opacity = animationCalcValues(
+                  values.messageD_opacityOut,
+                  currentYOffset
+                );
+                objects.messageD.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageD_translateY_out,
+                  currentYOffset
+                )}%, 0)`;
               }
             }
 
             break;
-          case 1:
-            // animationCalcValues();
-            break;
           case 2:
-            // animationCalcValues();
+            if (
+              objects.messageA &&
+              objects.messageB &&
+              objects.messageC &&
+              objects.pinB &&
+              objects.pinC &&
+              values.messageA_opacityIn &&
+              values.messageA_opacityOut &&
+              values.messageA_translateY_in &&
+              values.messageA_translateY_out &&
+              values.messageB_opacityIn &&
+              values.messageB_opacityOut &&
+              values.messageB_translateY_in &&
+              values.messageB_translateY_out &&
+              values.pinB_scaleY &&
+              values.messageC_translateY_in &&
+              values.messageC_translateY_out &&
+              values.messageC_opacityIn &&
+              values.messageC_opacityOut &&
+              values.pinC_scaleY
+            ) {
+              if (scrollRatio <= 0.25) {
+                objects.messageA.style.opacity = animationCalcValues(
+                  values.messageA_opacityIn,
+                  currentYOffset
+                );
+                objects.messageA.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageA_translateY_in,
+                  currentYOffset
+                )}%, 0)`;
+              } else {
+                objects.messageA.style.opacity = animationCalcValues(
+                  values.messageA_opacityOut,
+                  currentYOffset
+                );
+                objects.messageA.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageA_translateY_out,
+                  currentYOffset
+                )}%, 0)`;
+              }
+
+              if (scrollRatio <= 0.57) {
+                objects.messageB.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageB_translateY_in,
+                  currentYOffset
+                )}%, 0)`;
+                objects.messageB.style.opacity = animationCalcValues(
+                  values.messageB_opacityIn,
+                  currentYOffset
+                );
+                objects.pinB.style.transform = `scaleY(${animationCalcValues(
+                  values.pinB_scaleY,
+                  currentYOffset
+                )})`;
+              } else {
+                objects.messageB.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageB_translateY_out,
+                  currentYOffset
+                )}%, 0)`;
+                objects.messageB.style.opacity = animationCalcValues(
+                  values.messageB_opacityOut,
+                  currentYOffset
+                );
+                objects.pinB.style.transform = `scaleY(${animationCalcValues(
+                  values.pinB_scaleY,
+                  currentYOffset
+                )})`;
+              }
+
+              if (scrollRatio <= 0.83) {
+                objects.messageC.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageC_translateY_in,
+                  currentYOffset
+                )}%, 0)`;
+                objects.messageC.style.opacity = animationCalcValues(
+                  values.messageC_opacityIn,
+                  currentYOffset
+                );
+                objects.pinC.style.transform = `scaleY(${animationCalcValues(
+                  values.pinC_scaleY,
+                  currentYOffset
+                )})`;
+              } else {
+                objects.messageC.style.transform = `translate3d(0, ${animationCalcValues(
+                  values.messageC_translateY_out,
+                  currentYOffset
+                )}%, 0)`;
+                objects.messageC.style.opacity = animationCalcValues(
+                  values.messageC_opacityOut,
+                  currentYOffset
+                );
+                objects.pinC.style.transform = `scaleY(${animationCalcValues(
+                  values.pinC_scaleY,
+                  currentYOffset
+                )})`;
+              }
+            }
             break;
           case 3:
             // animationCalcValues();
@@ -302,7 +522,7 @@ const AirMug = () => {
             맞춤형 손잡이
           </p>
         </S.StickyBox>
-        <S.StickyBox stickyId={0} className="sticky ain-message d">
+        <S.StickyBox stickyId={0} className="sticky main-message d">
           <p>
             새롭게 입가를
             <br />
@@ -338,13 +558,13 @@ const AirMug = () => {
         </p>
       </S.ScrollSection>
       <S.ScrollSection id="scroll-section-2" sectionId={2}>
-        <S.StickyBox stickyId={1} className="sticky main-message">
+        <S.StickyBox stickyId={1} className="sticky main-message a">
           <p>
             <small>편안한 촉감</small>
             입과 하나 되다
           </p>
         </S.StickyBox>
-        <S.StickyBox stickyId={1} className="sticky desc-message">
+        <S.StickyBox stickyId={1} className="sticky desc-message b">
           <p>
             편안함 목넘김을 완성하는 디테일한 여러 구성 요소들, 우리는 이를
             하나하나 새롭게 살피고 재구성하는 과정을 거쳐 새로운 수준의 머그,
@@ -353,7 +573,7 @@ const AirMug = () => {
           </p>
           <div className="pin" />
         </S.StickyBox>
-        <S.StickyBox stickyId={1} className="sticky desc-message">
+        <S.StickyBox stickyId={1} className="sticky desc-message c">
           <p>
             디자인 앤 퀄리티 오브 스웨덴,
             <br />
