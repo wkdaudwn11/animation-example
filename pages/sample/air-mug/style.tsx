@@ -165,6 +165,7 @@ export const StickyBox = styled.div<{ stickyId: number }>`
     height: 3em;
     margin: 3px 0;
     font-size: 2.5rem;
+    opacity: 0;
 
     p {
       font-weight: bold;

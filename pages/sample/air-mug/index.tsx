@@ -9,13 +9,13 @@ type Scene = {
   scrollHeight: number;
   objects: {
     container: HTMLElement | null;
-    messageA?: Element | null;
-    messageB?: Element | null;
-    messageC?: Element | null;
-    messageD?: Element | null;
+    messageA: HTMLElement | null;
+    messageB: HTMLElement | null;
+    messageC: HTMLElement | null;
+    messageD: HTMLElement | null;
   };
-  values?: {
-    messageA_opacity?: number[];
+  values: {
+    messageA_opacity: number[];
   };
 };
 
@@ -27,6 +27,7 @@ const AirMug = () => {
       let yOffset = 0; // window pageYOffset
       let prevScrollHeight = 0; // 현재 스크롤 위치(yOffset)보다 이전에 위치한 스크롤 섹션들의 높이 값의 합
       let currentScene = 0; // 현재 보고 있는 scene (혹은 scroll-section)
+      let isNewScene = false;
 
       const sceneList: Scene[] = [
         {
@@ -58,6 +59,13 @@ const AirMug = () => {
           scrollHeight: 0,
           objects: {
             container: document.querySelector("#scroll-section-1"),
+            messageA: null,
+            messageB: null,
+            messageC: null,
+            messageD: null,
+          },
+          values: {
+            messageA_opacity: [],
           },
         },
         {
@@ -66,6 +74,13 @@ const AirMug = () => {
           scrollHeight: 0,
           objects: {
             container: document.querySelector("#scroll-section-2"),
+            messageA: null,
+            messageB: null,
+            messageC: null,
+            messageD: null,
+          },
+          values: {
+            messageA_opacity: [],
           },
         },
         {
@@ -74,6 +89,13 @@ const AirMug = () => {
           scrollHeight: 0,
           objects: {
             container: document.querySelector("#scroll-section-3"),
+            messageA: null,
+            messageB: null,
+            messageC: null,
+            messageD: null,
+          },
+          values: {
+            messageA_opacity: [],
           },
         },
       ];
@@ -107,10 +129,15 @@ const AirMug = () => {
         prevScrollHeight = 0;
       };
 
-      const animationCalcValues = (values, currentYOffset) => {
-        console.log("values >", values);
-        console.log("currentYOffset >", currentYOffset);
-        console.log("");
+      const animationCalcValues = (
+        values: number[],
+        currentYOffset: number
+      ) => {
+        const scrollRatio =
+          currentYOffset / sceneList[currentScene].scrollHeight;
+        const result = scrollRatio * (values[1] - values[0]) + values[0];
+
+        return result;
       };
 
       const playAnimation = () => {
@@ -122,14 +149,16 @@ const AirMug = () => {
 
         switch (currentScene) {
           case 0:
-            let messageA_opacity_0 = values.messageA_opacity
-              ? values.messageA_opacity[0]
-              : 0;
-            let messageA_opacity_1 = values.messageA_opacity
-              ? values.messageA_opacity[1]
-              : 0;
+            const messageA_opacityIn = animationCalcValues(
+              values.messageA_opacity,
+              currentYOffset
+            );
 
-            animationCalcValues(values.messageA_opacity, currentYOffset);
+            if (objects.messageA) {
+              objects.messageA.style.opacity = messageA_opacityIn.toString();
+              console.log(messageA_opacityIn);
+            }
+
             break;
           case 1:
             // animationCalcValues();
@@ -145,6 +174,7 @@ const AirMug = () => {
 
       const scrollLoop = () => {
         if (!containerRef?.current) return;
+        isNewScene = false;
 
         for (let i = 0; i < currentScene; i++) {
           if (currentScene >= sceneList.length) break;
@@ -157,14 +187,18 @@ const AirMug = () => {
           yOffset > prevScrollHeight + sceneList[currentScene].scrollHeight &&
           currentScene < sceneList.length
         ) {
+          isNewScene = true;
           currentScene++;
           containerRef.current.setAttribute("id", `show-scene-${currentScene}`);
         }
 
         if (yOffset < prevScrollHeight && currentScene > 0) {
+          isNewScene = true;
           currentScene--;
           containerRef.current.setAttribute("id", `show-scene-${currentScene}`);
         }
+
+        if (isNewScene) return;
 
         playAnimation();
       };
