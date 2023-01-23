@@ -9,6 +9,13 @@ type Scene = {
   scrollHeight: number;
   objects: {
     container: HTMLElement | null;
+    messageA?: Element | null;
+    messageB?: Element | null;
+    messageC?: Element | null;
+    messageD?: Element | null;
+  };
+  values?: {
+    messageA_opacity?: number[];
   };
 };
 
@@ -28,6 +35,21 @@ const AirMug = () => {
           scrollHeight: 0,
           objects: {
             container: document.querySelector("#scroll-section-0"),
+            messageA: document.querySelector(
+              "#scroll-section-0 .main-message.a"
+            ),
+            messageB: document.querySelector(
+              "#scroll-section-0 .main-message.b"
+            ),
+            messageC: document.querySelector(
+              "#scroll-section-0 .main-message.c"
+            ),
+            messageD: document.querySelector(
+              "#scroll-section-0 .main-message.d"
+            ),
+          },
+          values: {
+            messageA_opacity: [0, 1],
           },
         },
         {
@@ -85,6 +107,42 @@ const AirMug = () => {
         prevScrollHeight = 0;
       };
 
+      const animationCalcValues = (values, currentYOffset) => {
+        console.log("values >", values);
+        console.log("currentYOffset >", currentYOffset);
+        console.log("");
+      };
+
+      const playAnimation = () => {
+        const objects = sceneList[currentScene]?.objects || null;
+        const values = sceneList[currentScene]?.values || null;
+        const currentYOffset = yOffset - prevScrollHeight;
+
+        if (!objects || !values) return;
+
+        switch (currentScene) {
+          case 0:
+            let messageA_opacity_0 = values.messageA_opacity
+              ? values.messageA_opacity[0]
+              : 0;
+            let messageA_opacity_1 = values.messageA_opacity
+              ? values.messageA_opacity[1]
+              : 0;
+
+            animationCalcValues(values.messageA_opacity, currentYOffset);
+            break;
+          case 1:
+            // animationCalcValues();
+            break;
+          case 2:
+            // animationCalcValues();
+            break;
+          case 3:
+            // animationCalcValues();
+            break;
+        }
+      };
+
       const scrollLoop = () => {
         if (!containerRef?.current) return;
 
@@ -107,6 +165,8 @@ const AirMug = () => {
           currentScene--;
           containerRef.current.setAttribute("id", `show-scene-${currentScene}`);
         }
+
+        playAnimation();
       };
 
       window.addEventListener("scroll", () => {
@@ -127,24 +187,24 @@ const AirMug = () => {
       <Nav />
       <S.ScrollSection id="scroll-section-0" sectionId={0}>
         <h1>AirMug Pro</h1>
-        <S.StickyBox stickyId={0} className="sticky main-message">
+        <S.StickyBox stickyId={0} className="sticky main-message a">
           <p>
             온전히 빠져들게 하는
             <br />
             최고급 세라믹
           </p>
         </S.StickyBox>
-        <S.StickyBox stickyId={0} className="sticky main-message">
+        <S.StickyBox stickyId={0} className="sticky main-message b">
           <p>주변 맛을 느끼게 해주는 주변 맛 허용 모드</p>
         </S.StickyBox>
-        <S.StickyBox stickyId={0} className="sticky main-message">
+        <S.StickyBox stickyId={0} className="sticky main-message c">
           <p>
             온종일 편안한
             <br />
             맞춤형 손잡이
           </p>
         </S.StickyBox>
-        <S.StickyBox stickyId={0} className="sticky ain-message">
+        <S.StickyBox stickyId={0} className="sticky ain-message d">
           <p>
             새롭게 입가를
             <br />
