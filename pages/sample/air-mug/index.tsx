@@ -15,7 +15,11 @@ type Scene = {
     messageD: HTMLElement | null;
   };
   values: {
-    messageA_opacity: number[];
+    messageA_opacityIn: any[];
+    messageA_opacityOut: any[];
+    messageA_translateY_in: any[];
+    messageA_translateY_out: any[];
+    messageB_opacityIn: any[];
   };
 };
 
@@ -50,7 +54,11 @@ const AirMug = () => {
             ),
           },
           values: {
-            messageA_opacity: [0, 1],
+            messageA_opacityIn: [0, 1, { start: 0.1, end: 0.2 }],
+            messageA_opacityOut: [1, 0, { start: 0.25, end: 0.3 }],
+            messageA_translateY_in: [20, 0, { start: 0.1, end: 0.2 }],
+            messageA_translateY_out: [0, -20, { start: 0.25, end: 0.3 }],
+            messageB_opacityIn: [0, 1, { start: 0.3, end: 0.4 }],
           },
         },
         {
@@ -65,7 +73,11 @@ const AirMug = () => {
             messageD: null,
           },
           values: {
-            messageA_opacity: [],
+            messageA_opacityIn: [],
+            messageA_opacityOut: [],
+            messageA_translateY_in: [],
+            messageA_translateY_out: [],
+            messageB_opacityIn: [],
           },
         },
         {
@@ -80,7 +92,11 @@ const AirMug = () => {
             messageD: null,
           },
           values: {
-            messageA_opacity: [],
+            messageA_opacityIn: [],
+            messageA_opacityOut: [],
+            messageA_translateY_in: [],
+            messageA_translateY_out: [],
+            messageB_opacityIn: [],
           },
         },
         {
@@ -95,7 +111,11 @@ const AirMug = () => {
             messageD: null,
           },
           values: {
-            messageA_opacity: [],
+            messageA_opacityIn: [],
+            messageA_opacityOut: [],
+            messageA_translateY_in: [],
+            messageA_translateY_out: [],
+            messageB_opacityIn: [],
           },
         },
       ];
@@ -129,34 +149,78 @@ const AirMug = () => {
         prevScrollHeight = 0;
       };
 
-      const animationCalcValues = (
-        values: number[],
-        currentYOffset: number
-      ) => {
-        const scrollRatio =
-          currentYOffset / sceneList[currentScene].scrollHeight;
-        const result = scrollRatio * (values[1] - values[0]) + values[0];
+      const animationCalcValues = (values: any[], currentYOffset: number) => {
+        let result;
+        const scrollHeight = sceneList[currentScene].scrollHeight;
+        const scrollRatio = currentYOffset / scrollHeight;
+
+        if (values.length > 2) {
+          const partScrollStart = values[2].start * scrollHeight;
+          const partScrollEnd = values[2].end * scrollHeight;
+          const partScrollHeight = partScrollEnd - partScrollStart;
+
+          if (
+            currentYOffset >= partScrollStart &&
+            currentYOffset <= partScrollEnd
+          ) {
+            const partScrollRatio =
+              (currentYOffset - partScrollStart) / partScrollHeight;
+            result = partScrollRatio * (values[1] - values[0]) + values[0];
+          } else if (currentYOffset < partScrollStart) {
+            result = values[0];
+          } else if (currentYOffset > partScrollEnd) {
+            result = values[1];
+          }
+        } else {
+          result = scrollRatio * (values[1] - values[0]) + values[0];
+        }
 
         return result;
       };
 
       const playAnimation = () => {
-        const objects = sceneList[currentScene]?.objects || null;
-        const values = sceneList[currentScene]?.values || null;
+        const scene = sceneList[currentScene];
+        const scrollHeight = scene.scrollHeight;
+        const objects = scene.objects || null;
+        const values = scene.values || null;
         const currentYOffset = yOffset - prevScrollHeight;
+        const scrollRatio = currentYOffset / scrollHeight;
 
         if (!objects || !values) return;
 
         switch (currentScene) {
           case 0:
-            const messageA_opacityIn = animationCalcValues(
-              values.messageA_opacity,
-              currentYOffset
-            );
-
             if (objects.messageA) {
-              objects.messageA.style.opacity = messageA_opacityIn.toString();
-              console.log(messageA_opacityIn);
+              const messageA_opacityIn = animationCalcValues(
+                values.messageA_opacityIn,
+                currentYOffset
+              );
+              const messageA_opacityOut = animationCalcValues(
+                values.messageA_opacityOut,
+                currentYOffset
+              );
+
+              const messageA_translateY_in = animationCalcValues(
+                values.messageA_translateY_in,
+                currentYOffset
+              );
+              const messageA_translateY_out = animationCalcValues(
+                values.messageA_translateY_out,
+                currentYOffset
+              );
+
+              const intersection =
+                (values.messageA_opacityIn[2].end +
+                  values.messageA_opacityOut[2].start) /
+                2;
+
+              if (scrollRatio <= intersection) {
+                objects.messageA.style.opacity = messageA_opacityIn.toString();
+                objects.messageA.style.transform = `translateY(${messageA_translateY_in}%)`;
+              } else {
+                objects.messageA.style.opacity = messageA_opacityOut.toString();
+                objects.messageA.style.transform = `translateY(${messageA_translateY_out}%)`;
+              }
             }
 
             break;

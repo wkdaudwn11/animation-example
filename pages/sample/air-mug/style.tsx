@@ -154,18 +154,18 @@ export const ScrollSection = styled.section<{ sectionId: number }>`
 
 export const StickyBox = styled.div<{ stickyId: number }>`
   position: fixed;
-  top: 0;
-  left: 0;
   display: none;
   width: 100%;
 
   &.main-message {
+    top: 35vh;
     align-items: center;
     justify-content: center;
     height: 3em;
     margin: 3px 0;
     font-size: 2.5rem;
     opacity: 0;
+    transition: all 0.2s;
 
     p {
       font-weight: bold;
