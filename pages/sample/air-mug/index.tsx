@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import Nav from "./Nav";
 import * as S from "./style";
@@ -13,6 +13,8 @@ type Scene = {
 };
 
 const AirMug = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     (() => {
       let yOffset = 0; // window pageYOffset
@@ -55,12 +57,27 @@ const AirMug = () => {
       ];
 
       const handleChangeLayout = () => {
+        if (!containerRef?.current) return;
+
+        yOffset = window.pageYOffset;
+        let totalScrollHeight = 0;
+
         sceneList.forEach((scene) => {
           scene.scrollHeight = scene.heightNum * window.innerHeight;
           if (scene.objects.container) {
             scene.objects.container.style.height = `${scene.scrollHeight}px`;
           }
         });
+
+        for (let i in sceneList) {
+          totalScrollHeight += sceneList[i].scrollHeight;
+          if (totalScrollHeight > yOffset) {
+            currentScene = Number(i);
+            break;
+          }
+        }
+
+        containerRef.current.setAttribute("id", `show-scene-${currentScene}`);
       };
 
       const handleClear = () => {
@@ -69,6 +86,8 @@ const AirMug = () => {
       };
 
       const scrollLoop = () => {
+        if (!containerRef?.current) return;
+
         for (let i = 0; i < currentScene; i++) {
           if (currentScene >= sceneList.length) break;
 
@@ -81,27 +100,30 @@ const AirMug = () => {
           currentScene < sceneList.length
         ) {
           currentScene++;
+          containerRef.current.setAttribute("id", `show-scene-${currentScene}`);
         }
 
         if (yOffset < prevScrollHeight && currentScene > 0) {
           currentScene--;
+          containerRef.current.setAttribute("id", `show-scene-${currentScene}`);
         }
-
-        console.log(currentScene);
       };
 
-      handleChangeLayout();
-
-      window.addEventListener("resize", handleChangeLayout);
       window.addEventListener("scroll", () => {
         handleClear();
         scrollLoop();
       });
+      window.addEventListener("resize", handleChangeLayout);
+
+      // DomContentLoaded -> 이미지 로딩 안기다리고 HTML DOM 로딩만 기다림
+      // load -> 이미지, HTML DOM 로딩 모두 기다림
+      // window.addEventListener("DomContentLoaded", handleChangeLayout);
+      window.addEventListener("load", handleChangeLayout);
     })();
   }, []);
 
   return (
-    <S.Container>
+    <S.Container ref={containerRef}>
       <Nav />
       <S.ScrollSection id="scroll-section-0" sectionId={0}>
         <h1>AirMug Pro</h1>
