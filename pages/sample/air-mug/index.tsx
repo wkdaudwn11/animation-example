@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Nav from "./Nav";
 import * as S from "./style";
@@ -13,56 +13,91 @@ type Scene = {
 };
 
 const AirMug = () => {
-  const setLayout = (sceneList: Scene[]) => {
-    sceneList.forEach((scene) => {
-      scene.scrollHeight = scene.heightNum * window.innerHeight;
-      if (scene.objects.container) {
-        scene.objects.container.style.height = `${scene.scrollHeight}px`;
-      }
-    });
-
-    console.log("setLayout >", sceneList);
-  };
-
   useEffect(() => {
-    const sceneList: Scene[] = [
-      {
-        type: "animation",
-        heightNum: 5,
-        scrollHeight: 0,
-        objects: {
-          container: document.querySelector("#scroll-section-0"),
-        },
-      },
-      {
-        type: "normal",
-        heightNum: 5,
-        scrollHeight: 0,
-        objects: {
-          container: document.querySelector("#scroll-section-1"),
-        },
-      },
-      {
-        type: "animation",
-        heightNum: 5,
-        scrollHeight: 0,
-        objects: {
-          container: document.querySelector("#scroll-section-2"),
-        },
-      },
-      {
-        type: "animation",
-        heightNum: 5,
-        scrollHeight: 0,
-        objects: {
-          container: document.querySelector("#scroll-section-3"),
-        },
-      },
-    ];
+    (() => {
+      let yOffset = 0; // window pageYOffset
+      let prevScrollHeight = 0; // 현재 스크롤 위치(yOffset)보다 이전에 위치한 스크롤 섹션들의 높이 값의 합
+      let currentScene = 0; // 현재 보고 있는 scene (혹은 scroll-section)
 
-    setLayout(sceneList);
+      const sceneList: Scene[] = [
+        {
+          type: "animation",
+          heightNum: 5,
+          scrollHeight: 0,
+          objects: {
+            container: document.querySelector("#scroll-section-0"),
+          },
+        },
+        {
+          type: "normal",
+          heightNum: 5,
+          scrollHeight: 0,
+          objects: {
+            container: document.querySelector("#scroll-section-1"),
+          },
+        },
+        {
+          type: "animation",
+          heightNum: 5,
+          scrollHeight: 0,
+          objects: {
+            container: document.querySelector("#scroll-section-2"),
+          },
+        },
+        {
+          type: "animation",
+          heightNum: 5,
+          scrollHeight: 0,
+          objects: {
+            container: document.querySelector("#scroll-section-3"),
+          },
+        },
+      ];
 
-    window.addEventListener("resize", () => setLayout(sceneList));
+      const handleChangeLayout = () => {
+        sceneList.forEach((scene) => {
+          scene.scrollHeight = scene.heightNum * window.innerHeight;
+          if (scene.objects.container) {
+            scene.objects.container.style.height = `${scene.scrollHeight}px`;
+          }
+        });
+      };
+
+      const handleClear = () => {
+        yOffset = window.pageYOffset;
+        prevScrollHeight = 0;
+      };
+
+      const scrollLoop = () => {
+        for (let i = 0; i < currentScene; i++) {
+          if (currentScene >= sceneList.length) break;
+
+          const scene = sceneList[i];
+          prevScrollHeight += scene.scrollHeight;
+        }
+
+        if (
+          yOffset > prevScrollHeight + sceneList[currentScene].scrollHeight &&
+          currentScene < sceneList.length
+        ) {
+          currentScene++;
+        }
+
+        if (yOffset < prevScrollHeight && currentScene > 0) {
+          currentScene--;
+        }
+
+        console.log(currentScene);
+      };
+
+      handleChangeLayout();
+
+      window.addEventListener("resize", handleChangeLayout);
+      window.addEventListener("scroll", () => {
+        handleClear();
+        scrollLoop();
+      });
+    })();
   }, []);
 
   return (
