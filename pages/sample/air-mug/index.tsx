@@ -15,7 +15,7 @@ type Scene = {
     messageD?: HTMLElement | null;
     pinB?: HTMLElement | null;
     pinC?: HTMLElement | null;
-    canvas?: HTMLElement | null;
+    canvas?: any | null;
     videoImages?: any[];
     canvasCaption?: HTMLElement | null;
   };
@@ -76,7 +76,7 @@ const AirMug = () => {
             messageD: document.querySelector(
               "#scroll-section-0 .main-message.d"
             ) as HTMLElement,
-            canvas: document.querySelector("#video-canvas-0") as HTMLElement,
+            canvas: document.querySelector("#video-canvas-0") as any,
             videoImages: [],
           },
           values: {
@@ -276,8 +276,18 @@ const AirMug = () => {
               values.messageD_opacityIn &&
               values.messageD_opacityOut &&
               values.messageD_translateY_in &&
-              values.messageD_translateY_out
+              values.messageD_translateY_out &&
+              values.imageSequence &&
+              objects.canvas &&
+              objects.videoImages
             ) {
+              const sequence = Math.round(
+                animationCalcValues(values.imageSequence, currentYOffset)
+              );
+              const context = objects.canvas.getContext("2d");
+
+              context.drawImage(objects.videoImages[sequence], 0, 0);
+
               const intersection01 =
                 (values.messageA_opacityIn[2].end +
                   values.messageA_opacityOut[2].start) /

@@ -47,9 +47,6 @@ const NavLinks = styled.div`
 
 export const GlobalNavLinks = styled(NavLinks)`
   justify-content: space-between;
-
-  a.global-nav-item {
-  }
 `;
 
 export const LocalNav = styled.nav`
@@ -248,6 +245,10 @@ export const StickyBox = styled.div<{ stickyId: number }>`
       top: 0;
       display: block;
       background-color: #ccc;
+
+      #video-canvas-0 {
+        width: 100%;
+      }
     `};
 `;
 
