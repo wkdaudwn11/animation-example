@@ -208,6 +208,9 @@ const AirMug = () => {
         }
 
         containerRef.current.setAttribute("id", `show-scene-${currentScene}`);
+
+        const heightRatio = window.innerHeight / 1080;
+        sceneList[0].objects.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
       };
 
       const handleClear = () => {
@@ -285,7 +288,6 @@ const AirMug = () => {
                 animationCalcValues(values.imageSequence, currentYOffset)
               );
               const context = objects.canvas.getContext("2d");
-
               context.drawImage(objects.videoImages[sequence], 0, 0);
 
               const intersection01 =

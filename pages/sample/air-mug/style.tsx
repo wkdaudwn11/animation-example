@@ -244,12 +244,14 @@ export const StickyBox = styled.div<{ stickyId: number }>`
     css`
       top: 0;
       display: block;
-      background-color: #ccc;
-
-      #video-canvas-0 {
-        width: 100%;
-      }
+      height: 100%;
     `};
+
+  canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
 `;
 
 export const Footer = styled.footer`
