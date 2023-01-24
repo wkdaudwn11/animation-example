@@ -30,6 +30,7 @@ export const GlobalNav = styled.nav`
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 10;
   width: 100%;
   height: 44px;
   padding: 0 1rem;
@@ -55,6 +56,7 @@ export const LocalNav = styled.nav`
   position: absolute;
   top: 45px;
   left: 0;
+  z-index: 11;
   width: 100%;
   height: 52px;
   padding: 0 1rem;
@@ -238,6 +240,14 @@ export const StickyBox = styled.div<{ stickyId: number }>`
           left: 55%;
         }
       }
+    `};
+
+  ${({ stickyId }) =>
+    stickyId === 2 &&
+    css`
+      top: 0;
+      display: block;
+      background-color: #ccc;
     `};
 `;
 

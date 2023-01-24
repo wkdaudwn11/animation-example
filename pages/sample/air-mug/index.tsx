@@ -15,6 +15,8 @@ type Scene = {
     messageD?: HTMLElement | null;
     pinB?: HTMLElement | null;
     pinC?: HTMLElement | null;
+    canvas?: HTMLElement | null;
+    videoImages?: any[];
     canvasCaption?: HTMLElement | null;
   };
   values?: {
@@ -40,6 +42,8 @@ type Scene = {
     pinC_opacityIn?: any[];
     pinB_opacityOut?: any[];
     pinC_opacityOut?: any[];
+    videoImageCount?: number;
+    imageSequence?: number[];
   };
 };
 
@@ -72,6 +76,8 @@ const AirMug = () => {
             messageD: document.querySelector(
               "#scroll-section-0 .main-message.d"
             ) as HTMLElement,
+            canvas: document.querySelector("#video-canvas-0") as HTMLElement,
+            videoImages: [],
           },
           values: {
             messageA_opacityIn: [0, 1, { start: 0.1, end: 0.2 }],
@@ -90,6 +96,8 @@ const AirMug = () => {
             messageB_translateY_out: [0, -20, { start: 0.45, end: 0.5 }],
             messageC_translateY_out: [0, -20, { start: 0.65, end: 0.7 }],
             messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
+            videoImageCount: 300,
+            imageSequence: [0, 299],
           },
         },
         {
@@ -155,6 +163,24 @@ const AirMug = () => {
           },
         },
       ];
+
+      const setCanvasImages = () => {
+        if (
+          sceneList &&
+          Array.isArray(sceneList) &&
+          sceneList.length > 0 &&
+          sceneList[0]?.values?.videoImageCount &&
+          sceneList[0].objects.videoImages
+        ) {
+          let imgElem;
+
+          for (let i = 0; i < sceneList[0].values.videoImageCount; i++) {
+            imgElem = new Image();
+            imgElem.src = `/videos/001/IMG_${6726 + i}.JPG`;
+            sceneList[0].objects.videoImages.push(imgElem);
+          }
+        }
+      };
 
       const handleChangeLayout = () => {
         if (!containerRef?.current) return;
@@ -237,6 +263,7 @@ const AirMug = () => {
               objects.messageD &&
               values.messageA_opacityIn &&
               values.messageA_opacityOut &&
+              values.messageA_translateY_in &&
               values.messageA_translateY_out &&
               values.messageB_opacityIn &&
               values.messageB_opacityOut &&
@@ -275,7 +302,7 @@ const AirMug = () => {
                   currentYOffset
                 ).toString();
                 objects.messageA.style.transform = `translateY(${animationCalcValues(
-                  values.messageA_opacityOut,
+                  values.messageA_translateY_in,
                   currentYOffset
                 )}%)`;
               } else {
@@ -496,7 +523,10 @@ const AirMug = () => {
       // DomContentLoaded -> 이미지 로딩 안기다리고 HTML DOM 로딩만 기다림
       // load -> 이미지, HTML DOM 로딩 모두 기다림
       // window.addEventListener("DomContentLoaded", handleChangeLayout);
-      window.addEventListener("load", handleChangeLayout);
+      window.addEventListener("load", () => {
+        handleChangeLayout();
+        setCanvasImages();
+      });
     })();
   }, []);
 
@@ -505,6 +535,9 @@ const AirMug = () => {
       <Nav />
       <S.ScrollSection id="scroll-section-0" sectionId={0}>
         <h1>AirMug Pro</h1>
+        <S.StickyBox stickyId={2} className="sticky-canvas">
+          <canvas id="video-canvas-0" width="1920" height="1080" />
+        </S.StickyBox>
         <S.StickyBox stickyId={0} className="sticky main-message a">
           <p>
             온전히 빠져들게 하는
