@@ -44,6 +44,7 @@ type Scene = {
     pinC_opacityOut?: any[];
     videoImageCount?: number;
     imageSequence?: number[];
+    canvasOpacity?: any[];
   };
 };
 
@@ -98,6 +99,7 @@ const AirMug = () => {
             messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
             videoImageCount: 300,
             imageSequence: [0, 299],
+            canvasOpacity: [1, 0, { start: 0.9, end: 1 }],
           },
         },
         {
@@ -281,6 +283,7 @@ const AirMug = () => {
               values.messageD_translateY_in &&
               values.messageD_translateY_out &&
               values.imageSequence &&
+              values.canvasOpacity &&
               objects.canvas &&
               objects.videoImages
             ) {
@@ -289,6 +292,11 @@ const AirMug = () => {
               );
               const context = objects.canvas.getContext("2d");
               context.drawImage(objects.videoImages[sequence], 0, 0);
+
+              objects.canvas.style.opacity = animationCalcValues(
+                values.canvasOpacity,
+                currentYOffset
+              );
 
               const intersection01 =
                 (values.messageA_opacityIn[2].end +
@@ -526,6 +534,8 @@ const AirMug = () => {
         playAnimation();
       };
 
+      setCanvasImages();
+
       window.addEventListener("scroll", () => {
         handleClear();
         scrollLoop();
@@ -537,7 +547,12 @@ const AirMug = () => {
       // window.addEventListener("DomContentLoaded", handleChangeLayout);
       window.addEventListener("load", () => {
         handleChangeLayout();
-        setCanvasImages();
+        const objects = sceneList[0].objects;
+
+        if (objects && objects.canvas && objects.videoImages) {
+          const context = objects.canvas.getContext("2d");
+          context.drawImage(objects.videoImages[0], 0, 0);
+        }
       });
     })();
   }, []);
@@ -547,7 +562,7 @@ const AirMug = () => {
       <Nav />
       <S.ScrollSection id="scroll-section-0" sectionId={0}>
         <h1>AirMug Pro</h1>
-        <S.StickyBox stickyId={2} className="sticky-canvas">
+        <S.StickyBox stickyId={0} className="sticky sticky-canvas">
           <canvas id="video-canvas-0" width="1920" height="1080" />
         </S.StickyBox>
         <S.StickyBox stickyId={0} className="sticky main-message a">

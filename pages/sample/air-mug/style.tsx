@@ -77,17 +77,20 @@ export const LocalNavLinks = styled(NavLinks)`
 
 export const ScrollSection = styled.section<{ sectionId: number }>`
   padding-top: 50vh;
-  border: 3px solid red;
 
   ${({ sectionId }) =>
     sectionId === 0 &&
     css`
       h1 {
+        position: relative;
+        top: -10vh;
         font-size: 4rem;
         text-align: center;
+        z-index: 2;
 
         @media (min-width: 1024px) {
           font-size: 9vw;
+          top: -25vh;
         }
       }
     `};
@@ -239,18 +242,29 @@ export const StickyBox = styled.div<{ stickyId: number }>`
       }
     `};
 
-  ${({ stickyId }) =>
+  /* ${({ stickyId }) =>
     stickyId === 2 &&
     css`
       top: 0;
-      display: block;
       height: 100%;
-    `};
+    `}; */
+
+  &.sticky.sticky-canvas {
+    height: 100vh;
+    border: 1px solid red;
+    /* position: relative;
+    top: calc(-40vh + 72px);
+    border: 2px solid blue; */
+  }
 
   canvas {
     position: absolute;
-    top: 50%;
+    top: calc(-25vh + 92px);
     left: 50%;
+
+    @media (min-width: 1024px) {
+      top: calc(-40vh + 92px);
+    }
   }
 `;
 
