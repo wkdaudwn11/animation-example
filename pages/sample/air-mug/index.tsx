@@ -467,7 +467,7 @@ const AirMug = () => {
         </p>
       </S.ScrollSection>
       <S.ScrollSection id="scroll-section-2" sectionId={2}>
-        <S.StickyBox stickyId={0} className="sticky sticky-canvas">
+        <S.StickyBox stickyId={1} className="sticky sticky-canvas">
           <canvas id="video-canvas-1" width="1920" height="1080" />
         </S.StickyBox>
         <S.StickyBox stickyId={1} className="sticky main-message a">
