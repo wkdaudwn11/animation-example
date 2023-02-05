@@ -560,6 +560,72 @@ const AirMug = () => {
                 )})`;
               }
             }
+
+            // section3이 갑툭튀 하기 때문에 section2에서 미리 로드를 시켜야함.
+            if (scrollRatio > 0.9) {
+              const object = sceneList.length > 2 && sceneList[2].objects;
+              const values = sceneList.length > 2 && sceneList[2].values;
+
+              if (
+                !object ||
+                !values ||
+                !objects.canvas ||
+                !objects.images ||
+                objects.images.length === 0 ||
+                !values.whiteBoxLeft ||
+                !values.whiteBoxRight
+              )
+                return;
+
+              const { canvas } = objects;
+              const { whiteBoxLeft, whiteBoxRight } = values;
+
+              // 캔버스의 Scale 값 구하기 시작
+              const widthRatio = window.innerWidth / canvas.width;
+              const heightRatio = window.innerHeight / canvas.height;
+
+              // 캔버스보다 브라우저 창이 홀쭉하면 heightRatio, 아니면 widthRatio로 세팅
+              const canvasScaleRatio =
+                widthRatio <= heightRatio ? heightRatio : widthRatio;
+              canvas.style.transform = `scale(${canvasScaleRatio})`;
+
+              // 캔버스에 첫번째 이미지 (blend-image-1.jpg) 그려주기
+              const context = objects.canvas.getContext("2d");
+              context.drawImage(objects.images[0], 0, 0);
+              context.fillStyle = "white";
+
+              // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+              // window.innerWidth는 스크롤 값을 뺀 너비임. 그래서 약간 안맞아서 body의 너비로 변경.
+              const reCalcInnerWidth =
+                document.body.offsetWidth / canvasScaleRatio;
+              const reCalcInnerHeight =
+                document.body.offsetHeight / canvasScaleRatio;
+
+              // 좌, 우 흰색 박스의 크기
+              const whiteRectWidth = reCalcInnerWidth * 0.15;
+
+              // 좌, 우 흰색 박스의 영역 계산
+              whiteBoxLeft[0] = (canvas.width - reCalcInnerWidth) / 2;
+              whiteBoxLeft[1] = whiteBoxLeft[0] - whiteRectWidth;
+              whiteBoxRight[0] =
+                whiteBoxLeft[0] + reCalcInnerWidth - whiteRectWidth;
+              whiteBoxRight[1] = whiteBoxRight[0] + whiteRectWidth;
+
+              // 좌, 우 흰색 박스 그리기 (x, y, width, height)
+              context.fillRect(
+                parseInt(values.whiteBoxLeft[0]),
+                0,
+                parseInt(whiteRectWidth.toString()),
+                reCalcInnerHeight
+              );
+              context.fillRect(
+                parseInt(values.whiteBoxRight[0]),
+                0,
+                parseInt(whiteRectWidth.toString()),
+                reCalcInnerHeight
+              );
+            }
+
             break;
           case 3:
             if (
