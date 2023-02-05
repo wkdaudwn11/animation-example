@@ -51,6 +51,7 @@ type Scene = {
     canvasOpacityOut?: any[];
     whiteBoxLeft?: any[];
     whiteBoxRight?: any[];
+    rectStartY?: number;
   };
 };
 
@@ -184,6 +185,7 @@ const AirMug = () => {
           values: {
             whiteBoxLeft: [0, 0, { start: 0, end: 0 }],
             whiteBoxRight: [0, 0, { start: 0, end: 0 }],
+            rectStartY: 0,
           },
         },
       ];
@@ -296,7 +298,7 @@ const AirMug = () => {
         const currentYOffset = yOffset - prevScrollHeight;
         const scrollRatio = currentYOffset / scrollHeight;
 
-        if (!objects || !values) return;
+        if (!objects || !values || !document.body) return;
 
         switch (currentScene) {
           case 0:
@@ -584,10 +586,28 @@ const AirMug = () => {
             // 캔버스에 첫번째 이미지 (blend-image-1.jpg) 그려주기
             const context = objects.canvas.getContext("2d");
             context.drawImage(objects.images[0], 0, 0);
+            context.fillStyle = "white";
 
             // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
-            const reCalcInnerWidth = window.innerWidth / canvasScaleRatio;
-            const reCalcInnerHeight = window.innerHeight / canvasScaleRatio;
+            // window.innerWidth는 스크롤 값을 뺀 너비임. 그래서 약간 안맞아서 body의 너비로 변경.
+            const reCalcInnerWidth =
+              document.body.offsetWidth / canvasScaleRatio;
+            const reCalcInnerHeight =
+              document.body.offsetHeight / canvasScaleRatio;
+
+            // 이미지가 화면 제일 윗부분에 닿는 지점까지의 거리 계산
+            if (!values.rectStartY) {
+              const rectStartY =
+                canvas.offsetTop +
+                (canvas.height - canvas.height * canvasScaleRatio) / 2;
+              values.rectStartY = rectStartY;
+              values.whiteBoxLeft[2].start =
+                window.innerHeight / 2 / scrollHeight;
+              values.whiteBoxRight[2].start =
+                window.innerHeight / 2 / scrollHeight;
+              values.whiteBoxLeft[2].end = rectStartY / scrollHeight;
+              values.whiteBoxRight[2].end = rectStartY / scrollHeight;
+            }
 
             // 좌, 우 흰색 박스의 크기
             const whiteRectWidth = reCalcInnerWidth * 0.15;
@@ -601,13 +621,17 @@ const AirMug = () => {
 
             // 좌, 우 흰색 박스 그리기 (x, y, width, height)
             context.fillRect(
-              whiteBoxLeft[0],
+              parseInt(
+                animationCalcValues(values.whiteBoxLeft, currentYOffset)
+              ),
               0,
               parseInt(whiteRectWidth.toString()),
               reCalcInnerHeight
             );
             context.fillRect(
-              whiteBoxRight[0],
+              parseInt(
+                animationCalcValues(values.whiteBoxRight, currentYOffset)
+              ),
               0,
               parseInt(whiteRectWidth.toString()),
               reCalcInnerHeight

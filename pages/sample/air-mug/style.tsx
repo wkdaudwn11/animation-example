@@ -125,6 +125,7 @@ export const ScrollSection = styled.section<{ sectionId: number }>`
   ${({ sectionId }) =>
     sectionId === 3 &&
     css`
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
