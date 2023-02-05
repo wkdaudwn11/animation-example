@@ -125,6 +125,10 @@ export const ScrollSection = styled.section<{ sectionId: number }>`
   ${({ sectionId }) =>
     sectionId === 3 &&
     css`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
       p.mid-message {
         max-width: 1000px;
         margin: 0 auto;
@@ -139,6 +143,10 @@ export const ScrollSection = styled.section<{ sectionId: number }>`
         @media (min-width: 1024px) {
           font-size: 4vw;
         }
+      }
+
+      canvas.image-blend-canvas {
+        background-color: pink;
       }
 
       p.canvas-caption {

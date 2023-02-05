@@ -18,6 +18,8 @@ type Scene = {
     canvas?: any | null;
     videoImages?: any[];
     canvasCaption?: HTMLElement | null;
+    imagesPaths?: string[];
+    images?: HTMLImageElement[] | null;
   };
   values?: {
     messageA_opacityIn?: any[];
@@ -170,38 +172,51 @@ const AirMug = () => {
             canvasCaption: document.querySelector(
               ".canvas-caption"
             ) as HTMLElement,
+            canvas: document.querySelector(".image-blend-canvas") as any,
+            imagesPaths: [
+              "/images/blend-image-1.jpg",
+              "/images/blend-image-2.jpg",
+            ],
+            images: [],
           },
+          values: {},
         },
       ];
 
       const setCanvasImages = () => {
         if (
-          sceneList &&
-          Array.isArray(sceneList) &&
-          sceneList.length > 0 &&
-          sceneList[0]?.values?.videoImageCount &&
-          sceneList[0].objects.videoImages
-        ) {
-          for (let i = 0; i < sceneList[0].values.videoImageCount; i++) {
-            const imgElem = new Image();
-            imgElem.src = `/videos/001/IMG_${6726 + i}.JPG`;
-            sceneList[0].objects.videoImages.push(imgElem);
-          }
+          !sceneList ||
+          !Array.isArray(sceneList) ||
+          sceneList.length === 0 ||
+          !sceneList[0]?.values?.videoImageCount ||
+          !sceneList[0].objects.videoImages ||
+          !sceneList[2]?.values?.videoImageCount ||
+          !sceneList[2].objects.videoImages ||
+          !sceneList[3].objects.imagesPaths ||
+          sceneList[3].objects.imagesPaths.length === 0 ||
+          !sceneList[3].objects.images
+        )
+          return;
+
+        for (let i = 0; i < sceneList[0].values.videoImageCount; i++) {
+          const imgElem = new Image();
+          imgElem.src = `/videos/001/IMG_${6726 + i}.JPG`;
+          sceneList[0].objects.videoImages.push(imgElem);
         }
 
-        if (
-          sceneList &&
-          Array.isArray(sceneList) &&
-          sceneList.length > 0 &&
-          sceneList[2]?.values?.videoImageCount &&
-          sceneList[2].objects.videoImages
-        ) {
-          for (let i = 0; i < sceneList[2].values.videoImageCount; i++) {
-            const imgElem = new Image();
-            imgElem.src = `/videos/002/IMG_${7027 + i}.JPG`;
-            sceneList[2].objects.videoImages.push(imgElem);
-          }
+        for (let i = 0; i < sceneList[2].values.videoImageCount; i++) {
+          const imgElem = new Image();
+          imgElem.src = `/videos/002/IMG_${7027 + i}.JPG`;
+          sceneList[2].objects.videoImages.push(imgElem);
         }
+
+        for (let i = 0; i < sceneList[3].objects.imagesPaths.length; i++) {
+          const imgElem = new Image();
+          imgElem.src = sceneList[3].objects.imagesPaths[i];
+          sceneList[3].objects.images.push(imgElem);
+        }
+
+        console.log(sceneList[3].objects.images);
       };
 
       const handleChangeLayout = () => {
@@ -542,7 +557,27 @@ const AirMug = () => {
             }
             break;
           case 3:
-            // animationCalcValues();
+            if (
+              !objects.canvas ||
+              !objects.images ||
+              objects.images.length === 0
+            )
+              return;
+
+            const { canvas } = objects;
+
+            // 캔버스의 Scale 값 구하기.
+            // 캔버스보다 브라우저 창이 홀쭉하면 heightRatio, 아니면 widthRatio로 세팅
+            const widthRatio = window.innerWidth / canvas.width;
+            const heightRatio = window.innerHeight / canvas.height;
+            const canvasScaleRatio =
+              widthRatio >= heightRatio ? heightRatio : widthRatio;
+            canvas.style.transform = `scale(${canvasScaleRatio})`;
+
+            // 캔버스에 첫번째 이미지 (blend-image-1.jpg) 그려주기
+            const context = objects.canvas.getContext("2d");
+            context.drawImage(objects.images[0], 0, 0);
+
             break;
         }
       };
@@ -698,6 +733,7 @@ const AirMug = () => {
           <br />
           아름답고 부드러운 음료 공간.
         </p>
+        <canvas className="image-blend-canvas" width="1920" height="1080" />
         <p className="canvas-caption">
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eveniet at
           fuga quae perspiciatis veniam impedit et, ratione est optio porro.
