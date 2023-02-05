@@ -45,6 +45,8 @@ type Scene = {
     videoImageCount?: number;
     imageSequence?: number[];
     canvasOpacity?: any[];
+    canvasOpacityIn?: any[];
+    canvasOpacityOut?: any[];
   };
 };
 
@@ -155,7 +157,8 @@ const AirMug = () => {
             pinC_opacityOut: [1, 0, { start: 0.85, end: 0.9 }],
             videoImageCount: 960,
             imageSequence: [0, 959],
-            canvasOpacity: [1, 0, { start: 0.9, end: 1 }],
+            canvasOpacityIn: [0, 1, { start: 0, end: 0.1 }],
+            canvasOpacityOut: [1, 0, { start: 0.95, end: 1 }],
           },
         },
         {
@@ -179,10 +182,8 @@ const AirMug = () => {
           sceneList[0]?.values?.videoImageCount &&
           sceneList[0].objects.videoImages
         ) {
-          let imgElem;
-
           for (let i = 0; i < sceneList[0].values.videoImageCount; i++) {
-            imgElem = new Image();
+            const imgElem = new Image();
             imgElem.src = `/videos/001/IMG_${6726 + i}.JPG`;
             sceneList[0].objects.videoImages.push(imgElem);
           }
@@ -195,10 +196,8 @@ const AirMug = () => {
           sceneList[2]?.values?.videoImageCount &&
           sceneList[2].objects.videoImages
         ) {
-          let imgElem;
-
           for (let i = 0; i < sceneList[2].values.videoImageCount; i++) {
-            imgElem = new Image();
+            const imgElem = new Image();
             imgElem.src = `/videos/002/IMG_${7027 + i}.JPG`;
             sceneList[2].objects.videoImages.push(imgElem);
           }
@@ -273,7 +272,7 @@ const AirMug = () => {
 
       const playAnimation = () => {
         const scene = sceneList[currentScene];
-        const scrollHeight = scene.scrollHeight;
+        const scrollHeight = scene?.scrollHeight || 1;
         const objects = scene.objects || null;
         const values = scene.values || null;
         const currentYOffset = yOffset - prevScrollHeight;
@@ -428,6 +427,7 @@ const AirMug = () => {
               objects.pinB &&
               objects.pinC &&
               objects.videoImages &&
+              objects.canvas &&
               values.messageA_opacityIn &&
               values.messageA_opacityOut &&
               values.messageA_translateY_in &&
@@ -442,13 +442,27 @@ const AirMug = () => {
               values.messageC_opacityIn &&
               values.messageC_opacityOut &&
               values.pinC_scaleY &&
-              values.imageSequence
+              values.imageSequence &&
+              values.canvasOpacityIn &&
+              values.canvasOpacityOut
             ) {
               const sequence2 = Math.round(
                 animationCalcValues(values.imageSequence, currentYOffset)
               );
               const context = objects.canvas.getContext("2d");
               context.drawImage(objects.videoImages[sequence2], 0, 0);
+
+              if (scrollRatio <= 0.5) {
+                objects.canvas.style.opacity = animationCalcValues(
+                  values.canvasOpacityIn,
+                  currentYOffset
+                );
+              } else {
+                objects.canvas.style.opacity = animationCalcValues(
+                  values.canvasOpacityOut,
+                  currentYOffset
+                );
+              }
 
               if (scrollRatio <= 0.25) {
                 objects.messageA.style.opacity = animationCalcValues(
@@ -541,7 +555,7 @@ const AirMug = () => {
           if (currentScene >= sceneList.length) break;
 
           const scene = sceneList[i];
-          prevScrollHeight += scene.scrollHeight;
+          prevScrollHeight += scene.scrollHeight || 0;
         }
 
         if (

@@ -187,6 +187,28 @@ export const StickyBox = styled.div<{ stickyId: number }>`
     }
   }
 
+  &.sticky.sticky-canvas {
+    height: 100vh;
+  }
+
+  canvas {
+    position: absolute;
+    top: calc(-30vh + 96px);
+    left: 50%;
+
+    @media (min-width: 1024px) {
+      top: -30vh;
+    }
+
+    @media (min-width: 1400px) {
+      top: -40vh;
+    }
+
+    @media (min-width: 1600px) {
+      top: -50vh;
+    }
+  }
+
   ${({ stickyId }) =>
     stickyId === 1 &&
     css`
@@ -197,6 +219,7 @@ export const StickyBox = styled.div<{ stickyId: number }>`
       &.desc-message {
         width: 50%;
         font-weight: bold;
+        opacity: 0;
       }
 
       .pin {
@@ -240,32 +263,17 @@ export const StickyBox = styled.div<{ stickyId: number }>`
           left: 55%;
         }
       }
+
+      &.sticky-canvas {
+        top: 100vh;
+        left: 0;
+      }
+
+      canvas {
+        top: -50vh;
+        left: 50%;
+      }
     `};
-
-  /* ${({ stickyId }) =>
-    stickyId === 2 &&
-    css`
-      top: 0;
-      height: 100%;
-    `}; */
-
-  &.sticky.sticky-canvas {
-    height: 100vh;
-    border: 1px solid red;
-    /* position: relative;
-    top: calc(-40vh + 72px);
-    border: 2px solid blue; */
-  }
-
-  canvas {
-    position: absolute;
-    top: calc(-25vh + 92px);
-    left: 50%;
-
-    @media (min-width: 1024px) {
-      top: calc(-40vh + 92px);
-    }
-  }
 `;
 
 export const Footer = styled.footer`
