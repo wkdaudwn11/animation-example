@@ -215,8 +215,6 @@ const AirMug = () => {
           imgElem.src = sceneList[3].objects.imagesPaths[i];
           sceneList[3].objects.images.push(imgElem);
         }
-
-        console.log(sceneList[3].objects.images);
       };
 
       const handleChangeLayout = () => {
@@ -571,7 +569,7 @@ const AirMug = () => {
             const widthRatio = window.innerWidth / canvas.width;
             const heightRatio = window.innerHeight / canvas.height;
             const canvasScaleRatio =
-              widthRatio >= heightRatio ? heightRatio : widthRatio;
+              widthRatio <= heightRatio ? heightRatio : widthRatio;
             canvas.style.transform = `scale(${canvasScaleRatio})`;
 
             // 캔버스에 첫번째 이미지 (blend-image-1.jpg) 그려주기
