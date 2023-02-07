@@ -23,6 +23,7 @@ export const Container = styled.div`
   &#show-scene-2 #scroll-section-2 .sticky,
   &#show-scene-3 #scroll-section-3 .sticky {
     display: flex;
+    will-change: transform, opacity;
   }
 `;
 
