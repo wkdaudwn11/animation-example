@@ -852,8 +852,6 @@ const AirMug = () => {
         playAnimation();
       };
 
-      setCanvasImages();
-
       const loop = () => {
         delayedYOffset = delayedYOffset + (yOffset - delayedYOffset) * acc;
 
@@ -900,7 +898,18 @@ const AirMug = () => {
         }
       });
 
-      window.addEventListener("resize", handleChangeLayout);
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 900) {
+          handleChangeLayout();
+        }
+
+        if (sceneList.length > 4 && sceneList[3]?.values?.rectStartY) {
+          sceneList[3].values.rectStartY = 0;
+        }
+      });
+
+      // 가로모드, 세로모드 변경시 일어나는 이벤트
+      window.addEventListener("orientationchange", handleChangeLayout);
 
       // DomContentLoaded -> 이미지 로딩 안기다리고 HTML DOM 로딩만 기다림
       // load -> 이미지, HTML DOM 로딩 모두 기다림
@@ -914,6 +923,8 @@ const AirMug = () => {
           context.drawImage(objects.videoImages[0], 0, 0);
         }
       });
+
+      setCanvasImages();
     })();
   }, []);
 

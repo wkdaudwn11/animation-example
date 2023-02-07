@@ -160,7 +160,6 @@ export const ScrollSection = styled.section<{ sectionId: number }>`
       p.canvas-caption {
         max-width: 1000px;
         margin: 0 auto;
-        margin-top: -2em;
         padding: 0 1rem;
         font-size: 1.2rem;
         color: #888;
