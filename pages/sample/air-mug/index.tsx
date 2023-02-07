@@ -637,6 +637,12 @@ const AirMug = () => {
             )
               return;
 
+            // section 3은 기능이 많아서 총 3개의 스텝으로 나눔
+            // step1: 이미지가 나타나고 커지는 단계 (윈도우 상단에 닿을 때까지)
+            // step2: 이미지가 다 커진 후, fixed되며 하단의 블랜딩 이미지가 나타나는 단계 (패럴랙스 스크롤)
+            // step3: 블랜딩 이미지가 작아지면서 다시 일반 스크롤이 되는 단계
+            let step = 0;
+
             const { canvas } = objects;
             const { whiteBoxLeft, whiteBoxRight } = values;
 
@@ -702,6 +708,19 @@ const AirMug = () => {
               parseInt(whiteRectWidth.toString()),
               reCalcInnerHeight
             );
+
+            if (scrollRatio < values.whiteBoxLeft[2].end) {
+              // 캔버스가 브라우저 상단에 닿지 않았다면 step1
+              step = 1;
+              canvas.classList.remove("sticky");
+            } else {
+              // 아니라면 step2
+              step = 2;
+              canvas.classList.add("sticky");
+              canvas.style.top = `-${
+                (canvas.height - canvas.height * canvasScaleRatio) / 2
+              }px`;
+            }
 
             break;
         }
