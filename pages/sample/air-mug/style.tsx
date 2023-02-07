@@ -146,8 +146,8 @@ export const ScrollSection = styled.section<{ sectionId: number }>`
         }
       }
 
-      canvas.image-blend-canvas {
-        background-color: pink;
+      canvas.image-blend-canvas.sticky {
+        position: fixed;
       }
 
       p.canvas-caption {
