@@ -53,6 +53,7 @@ type Scene = {
     whiteBoxRight?: any[];
     rectStartY?: number;
     blendHeight?: any[];
+    canvasScale?: any[];
   };
 };
 
@@ -187,6 +188,7 @@ const AirMug = () => {
             whiteBoxLeft: [0, 0, { start: 0, end: 0 }],
             whiteBoxRight: [0, 0, { start: 0, end: 0 }],
             blendHeight: [0, 0, { start: 0, end: 0 }],
+            canvasScale: [0, 0, { start: 0, end: 0 }],
             rectStartY: 0,
           },
         },
@@ -636,7 +638,8 @@ const AirMug = () => {
               objects.images.length < 2 ||
               !values.whiteBoxLeft ||
               !values.whiteBoxRight ||
-              !values.blendHeight
+              !values.blendHeight ||
+              !values.canvasScale
             )
               return;
 
@@ -746,6 +749,19 @@ const AirMug = () => {
               canvas.style.top = `-${
                 (canvas.height - canvas.height * canvasScaleRatio) / 2
               }px`;
+
+              if (scrollRatio > values.blendHeight[2].end) {
+                values.canvasScale[0] = canvasScaleRatio;
+                values.canvasScale[1] =
+                  document.body.offsetWidth / (1.5 * canvas.width);
+                values.canvasScale[2].start = values.blendHeight[2].end;
+                values.canvasScale[2].end = values.canvasScale[2].start + 0.2;
+
+                canvas.style.transform = `scale(${animationCalcValues(
+                  values.canvasScale,
+                  currentYOffset
+                )})`;
+              }
             }
 
             break;
