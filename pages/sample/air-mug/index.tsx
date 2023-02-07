@@ -68,6 +68,12 @@ const AirMug = () => {
       let currentScene = 0; // 현재 보고 있는 scene (혹은 scroll-section)
       let isNewScene = false;
 
+      // 부드러운 동영상 처리 관련 변수들 (감속 로직에 쓰이는 변수들)
+      const acc = 0.1; // 프레임이라 보면 될듯
+      let delayedYOffset = 0; // 현재 위치
+      let rafId; // animationFrame 담을 변수
+      let rafState = false; // animationFrame 시작, 종료 boolean 값 (시작: true, 종료: false)
+
       const sceneList: Scene[] = [
         {
           type: "animation",
@@ -345,12 +351,6 @@ const AirMug = () => {
               objects.canvas &&
               objects.videoImages
             ) {
-              const sequence = Math.round(
-                animationCalcValues(values.imageSequence, currentYOffset)
-              );
-              const context = objects.canvas.getContext("2d");
-              context.drawImage(objects.videoImages[sequence], 0, 0);
-
               objects.canvas.style.opacity = animationCalcValues(
                 values.canvasOpacity,
                 currentYOffset
@@ -483,12 +483,6 @@ const AirMug = () => {
               values.canvasOpacityIn &&
               values.canvasOpacityOut
             ) {
-              const sequence2 = Math.round(
-                animationCalcValues(values.imageSequence, currentYOffset)
-              );
-              const context = objects.canvas.getContext("2d");
-              context.drawImage(objects.videoImages[sequence2], 0, 0);
-
               if (scrollRatio <= 0.5) {
                 objects.canvas.style.opacity = animationCalcValues(
                   values.canvasOpacityIn,
@@ -838,7 +832,7 @@ const AirMug = () => {
         }
 
         if (
-          yOffset >
+          delayedYOffset >
             prevScrollHeight + (sceneList[currentScene]?.scrollHeight || 0) &&
           currentScene < sceneList.length
         ) {
@@ -847,7 +841,7 @@ const AirMug = () => {
           containerRef.current.setAttribute("id", `show-scene-${currentScene}`);
         }
 
-        if (yOffset < prevScrollHeight && currentScene > 0) {
+        if (delayedYOffset < prevScrollHeight && currentScene > 0) {
           isNewScene = true;
           currentScene--;
           containerRef.current.setAttribute("id", `show-scene-${currentScene}`);
@@ -860,10 +854,50 @@ const AirMug = () => {
 
       setCanvasImages();
 
+      const loop = () => {
+        delayedYOffset = delayedYOffset + (yOffset - delayedYOffset) * acc;
+
+        const currentYOffset = delayedYOffset - prevScrollHeight;
+        const objects = sceneList[currentScene].objects;
+        const values = sceneList[currentScene].values;
+
+        if (
+          (currentScene === 0 || currentScene === 2) &&
+          objects &&
+          values &&
+          values.imageSequence &&
+          objects.canvas &&
+          objects.videoImages &&
+          !isNewScene
+        ) {
+          const sequence = Math.round(
+            animationCalcValues(values.imageSequence, currentYOffset)
+          );
+          const context = objects.canvas.getContext("2d");
+
+          if (objects.videoImages[sequence]) {
+            context.drawImage(objects.videoImages[sequence], 0, 0);
+          }
+        }
+
+        rafId = requestAnimationFrame(loop);
+        console.log("loop");
+
+        if (Math.abs(yOffset - delayedYOffset) < 1) {
+          cancelAnimationFrame(rafId);
+          rafState = false;
+        }
+      };
+
       window.addEventListener("scroll", () => {
         handleClear();
         scrollLoop();
         checkMenu();
+
+        if (!rafState) {
+          rafId = requestAnimationFrame(loop);
+          rafState = true;
+        }
       });
 
       window.addEventListener("resize", handleChangeLayout);
