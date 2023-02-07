@@ -54,6 +54,8 @@ type Scene = {
     rectStartY?: number;
     blendHeight?: any[];
     canvasScale?: any[];
+    canvasCaptionOpacity?: any[];
+    canvasCaptionTranslateY?: any[];
   };
 };
 
@@ -190,6 +192,8 @@ const AirMug = () => {
             blendHeight: [0, 0, { start: 0, end: 0 }],
             canvasScale: [0, 0, { start: 0, end: 0 }],
             rectStartY: 0,
+            canvasCaptionOpacity: [0, 1, { start: 0, end: 0 }],
+            canvasCaptionTranslateY: [20, 0, { start: 0, end: 0 }],
           },
         },
       ];
@@ -636,10 +640,13 @@ const AirMug = () => {
               !objects.canvas ||
               !objects.images ||
               objects.images.length < 2 ||
+              !objects.canvasCaption ||
               !values.whiteBoxLeft ||
               !values.whiteBoxRight ||
               !values.blendHeight ||
-              !values.canvasScale
+              !values.canvasScale ||
+              !values.canvasCaptionOpacity ||
+              !values.canvasCaptionTranslateY
             )
               return;
 
@@ -723,8 +730,10 @@ const AirMug = () => {
               // 아니라면 step2
               step = 2;
 
+              // 블렌딩 효과 끝난 후, 스크롤 내린만큼 marginTop을 주기 위한 변수
               const marginTopPer = 0.4;
 
+              // 블렌딩 값 설정
               values.blendHeight[0] = 0;
               values.blendHeight[1] = canvas.height;
               values.blendHeight[2].start = values.whiteBoxLeft[2].end;
@@ -736,6 +745,7 @@ const AirMug = () => {
                 currentYOffset
               );
 
+              // 블렌딩 이미지 그리기
               context.drawImage(
                 objects.images[1],
                 0,
@@ -748,11 +758,13 @@ const AirMug = () => {
                 blendHeight
               );
 
+              // 블렌딩 이미지를 fixed로 설정 후 스크롤 값에 따라서 천천히 올려주는 작업
               canvas.classList.add("sticky");
               canvas.style.top = `-${
                 (canvas.height - canvas.height * canvasScaleRatio) / 2
               }px`;
 
+              // 블렌딩 이미직가 다 올라왔으면, 축소 시켜주는 작업
               if (scrollRatio > values.blendHeight[2].end) {
                 values.canvasScale[0] = canvasScaleRatio;
                 values.canvasScale[1] =
@@ -769,12 +781,35 @@ const AirMug = () => {
                 canvas.style.marginTop = 0;
               }
 
+              // 축소가 다 끝났으면 marginTop을 줘서 하단의 이미지가 보여지게꿈 해준다
+              // 추가로 sticky 클래스를 지워서 position이 fixed인 것을 지워준다.
               if (
                 scrollRatio > values.canvasScale[2].end &&
                 values.canvasScale[2].end > 0
               ) {
                 canvas.classList.remove("sticky");
-                canvas.style.marginTop = `${scrollHeight * 0.4}px`;
+                canvas.style.marginTop = `${scrollHeight * marginTopPer}px`;
+
+                // 하단 문구 애니메이션 적용 (opacity, translateY)
+                values.canvasCaptionOpacity[2].start =
+                  values.canvasScale[2].end;
+                values.canvasCaptionOpacity[2].end =
+                  values.canvasScale[2].end + 0.1;
+
+                values.canvasCaptionTranslateY[2].start =
+                  values.canvasScale[2].end;
+                values.canvasCaptionTranslateY[2].end =
+                  values.canvasScale[2].end + 0.1;
+
+                objects.canvasCaption.style.opacity = animationCalcValues(
+                  values.canvasCaptionOpacity,
+                  currentYOffset
+                );
+
+                objects.canvasCaption.style.transform = `translate3d(0,${animationCalcValues(
+                  values.canvasCaptionTranslateY,
+                  currentYOffset
+                )}%,0)`;
               }
             }
 
