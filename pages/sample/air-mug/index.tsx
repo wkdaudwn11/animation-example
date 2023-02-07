@@ -790,6 +790,7 @@ const AirMug = () => {
                 canvas.classList.remove("sticky");
                 canvas.style.marginTop = `${scrollHeight * marginTopPer}px`;
 
+                // 하단 문구 애니메이션 적용 (opacity, translateY)
                 values.canvasCaptionOpacity[2].start =
                   values.canvasScale[2].end;
                 values.canvasCaptionOpacity[2].end =
