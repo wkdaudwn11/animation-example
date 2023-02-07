@@ -300,3 +300,16 @@ export const Footer = styled.footer`
   color: white;
   background: darkorange;
 `;
+
+export const LoadingBox = styled.div`
+  position: fixed;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  font-size: 32px;
+  font-weight: bold;
+  background-color: #f5f5f5;
+`;

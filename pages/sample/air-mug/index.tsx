@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as S from "./style";
 
 type Scene = {
@@ -58,6 +58,8 @@ type Scene = {
 };
 
 const AirMug = () => {
+  const [initLoading, setInitLoading] = useState(true);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const localNavRef = useRef<HTMLDivElement>(null);
 
@@ -887,30 +889,6 @@ const AirMug = () => {
         }
       };
 
-      window.addEventListener("scroll", () => {
-        handleClear();
-        scrollLoop();
-        checkMenu();
-
-        if (!rafState) {
-          rafId = requestAnimationFrame(loop);
-          rafState = true;
-        }
-      });
-
-      window.addEventListener("resize", () => {
-        if (window.innerWidth > 900) {
-          handleChangeLayout();
-        }
-
-        if (sceneList.length > 4 && sceneList[3]?.values?.rectStartY) {
-          sceneList[3].values.rectStartY = 0;
-        }
-      });
-
-      // 가로모드, 세로모드 변경시 일어나는 이벤트
-      window.addEventListener("orientationchange", handleChangeLayout);
-
       // DomContentLoaded -> 이미지 로딩 안기다리고 HTML DOM 로딩만 기다림
       // load -> 이미지, HTML DOM 로딩 모두 기다림
       // window.addEventListener("DomContentLoaded", handleChangeLayout);
@@ -922,14 +900,47 @@ const AirMug = () => {
           const context = objects.canvas.getContext("2d");
           context.drawImage(objects.videoImages[0], 0, 0);
         }
+
+        window.addEventListener("scroll", () => {
+          handleClear();
+          scrollLoop();
+          checkMenu();
+
+          if (!rafState) {
+            rafId = requestAnimationFrame(loop);
+            rafState = true;
+          }
+        });
+
+        window.addEventListener("resize", () => {
+          if (window.innerWidth > 900) {
+            handleChangeLayout();
+          }
+
+          if (sceneList.length > 4 && sceneList[3]?.values?.rectStartY) {
+            sceneList[3].values.rectStartY = 0;
+          }
+        });
+
+        // 가로모드, 세로모드 변경시 일어나는 이벤트
+        window.addEventListener("orientationchange", handleChangeLayout);
+
+        setInitLoading(false);
+
+        const body = document.querySelector("body");
+        if (body) body.style.overflowY = "auto";
       });
 
       setCanvasImages();
     })();
+
+    const body = document.querySelector("body");
+    if (body) body.style.overflow = "hidden";
   }, []);
 
   return (
     <S.Container ref={containerRef}>
+      {initLoading && <S.LoadingBox>Loading2~</S.LoadingBox>}
       <S.GlobalNav>
         <S.GlobalNavLinks>
           <a href="#" className="global-nav-item">
