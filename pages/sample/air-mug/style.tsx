@@ -58,6 +58,13 @@ export const LocalNav = styled.nav`
   height: 52px;
   padding: 0 1rem;
   border-bottom: 1px solid #ddd;
+
+  &.local-nav-sticky {
+    position: fixed;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: saturate(180%) blur(15px);
+  }
 `;
 
 export const LocalNavLinks = styled(NavLinks)`

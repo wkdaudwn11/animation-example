@@ -1,6 +1,4 @@
 import { useEffect, useRef } from "react";
-
-import Nav from "./Nav";
 import * as S from "./style";
 
 type Scene = {
@@ -61,6 +59,7 @@ type Scene = {
 
 const AirMug = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const localNavRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     (() => {
@@ -229,6 +228,16 @@ const AirMug = () => {
           const imgElem = new Image();
           imgElem.src = sceneList[3].objects.imagesPaths[i];
           sceneList[3].objects.images.push(imgElem);
+        }
+      };
+
+      const checkMenu = () => {
+        if (!localNavRef.current) return;
+
+        if (yOffset > 44) {
+          localNavRef.current.classList.add("local-nav-sticky");
+        } else {
+          localNavRef.current.classList.remove("local-nav-sticky");
         }
       };
 
@@ -854,7 +863,9 @@ const AirMug = () => {
       window.addEventListener("scroll", () => {
         handleClear();
         scrollLoop();
+        checkMenu();
       });
+
       window.addEventListener("resize", handleChangeLayout);
 
       // DomContentLoaded -> 이미지 로딩 안기다리고 HTML DOM 로딩만 기다림
@@ -874,7 +885,32 @@ const AirMug = () => {
 
   return (
     <S.Container ref={containerRef}>
-      <Nav />
+      <S.GlobalNav>
+        <S.GlobalNavLinks>
+          <a href="#" className="global-nav-item">
+            Rooms
+          </a>
+          <a href="#" className="global-nav-item">
+            Ideas
+          </a>
+          <a href="#" className="global-nav-item">
+            Stores
+          </a>
+          <a href="#" className="global-nav-item">
+            Contact
+          </a>
+        </S.GlobalNavLinks>
+      </S.GlobalNav>
+      <S.LocalNav ref={localNavRef}>
+        <S.LocalNavLinks>
+          <a href="#" className="product-name">
+            AirMug Pro
+          </a>
+          <a href="#">개요</a>
+          <a href="#">제품사양</a>
+          <a href="#">구입하기</a>
+        </S.LocalNavLinks>
+      </S.LocalNav>
       <S.ScrollSection id="scroll-section-0" sectionId={0}>
         <h1>AirMug Pro</h1>
         <S.StickyBox stickyId={0} className="sticky sticky-canvas">
