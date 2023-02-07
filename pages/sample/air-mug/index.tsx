@@ -52,6 +52,7 @@ type Scene = {
     whiteBoxLeft?: any[];
     whiteBoxRight?: any[];
     rectStartY?: number;
+    blendHeight?: any[];
   };
 };
 
@@ -185,6 +186,7 @@ const AirMug = () => {
           values: {
             whiteBoxLeft: [0, 0, { start: 0, end: 0 }],
             whiteBoxRight: [0, 0, { start: 0, end: 0 }],
+            blendHeight: [0, 0, { start: 0, end: 0 }],
             rectStartY: 0,
           },
         },
@@ -631,9 +633,10 @@ const AirMug = () => {
             if (
               !objects.canvas ||
               !objects.images ||
-              objects.images.length === 0 ||
+              objects.images.length < 2 ||
               !values.whiteBoxLeft ||
-              !values.whiteBoxRight
+              !values.whiteBoxRight ||
+              !values.blendHeight
             )
               return;
 
@@ -716,6 +719,29 @@ const AirMug = () => {
             } else {
               // 아니라면 step2
               step = 2;
+
+              values.blendHeight[0] = 0;
+              values.blendHeight[1] = canvas.height;
+              values.blendHeight[2].start = values.whiteBoxLeft[2].end;
+              values.blendHeight[2].end = values.whiteBoxLeft[2].end + 0.2;
+
+              const blendHeight = animationCalcValues(
+                values.blendHeight,
+                currentYOffset
+              );
+
+              context.drawImage(
+                objects.images[1],
+                0,
+                canvas.height - blendHeight,
+                canvas.width,
+                blendHeight,
+                0,
+                canvas.height - blendHeight,
+                canvas.width,
+                blendHeight
+              );
+
               canvas.classList.add("sticky");
               canvas.style.top = `-${
                 (canvas.height - canvas.height * canvasScaleRatio) / 2
