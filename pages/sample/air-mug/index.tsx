@@ -723,10 +723,13 @@ const AirMug = () => {
               // 아니라면 step2
               step = 2;
 
+              const marginTopPer = 0.4;
+
               values.blendHeight[0] = 0;
               values.blendHeight[1] = canvas.height;
               values.blendHeight[2].start = values.whiteBoxLeft[2].end;
-              values.blendHeight[2].end = values.whiteBoxLeft[2].end + 0.2;
+              values.blendHeight[2].end =
+                values.whiteBoxLeft[2].end + marginTopPer / 2;
 
               const blendHeight = animationCalcValues(
                 values.blendHeight,
@@ -755,12 +758,23 @@ const AirMug = () => {
                 values.canvasScale[1] =
                   document.body.offsetWidth / (1.5 * canvas.width);
                 values.canvasScale[2].start = values.blendHeight[2].end;
-                values.canvasScale[2].end = values.canvasScale[2].start + 0.2;
+                values.canvasScale[2].end =
+                  values.canvasScale[2].start + marginTopPer / 2;
 
                 canvas.style.transform = `scale(${animationCalcValues(
                   values.canvasScale,
                   currentYOffset
                 )})`;
+
+                canvas.style.marginTop = 0;
+              }
+
+              if (
+                scrollRatio > values.canvasScale[2].end &&
+                values.canvasScale[2].end > 0
+              ) {
+                canvas.classList.remove("sticky");
+                canvas.style.marginTop = `${scrollHeight * 0.4}px`;
               }
             }
 
