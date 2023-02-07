@@ -18,6 +18,8 @@ type Scene = {
     canvas?: any | null;
     videoImages?: any[];
     canvasCaption?: HTMLElement | null;
+    imagesPaths?: string[];
+    images?: HTMLImageElement[] | null;
   };
   values?: {
     messageA_opacityIn?: any[];
@@ -47,6 +49,13 @@ type Scene = {
     canvasOpacity?: any[];
     canvasOpacityIn?: any[];
     canvasOpacityOut?: any[];
+    whiteBoxLeft?: any[];
+    whiteBoxRight?: any[];
+    rectStartY?: number;
+    blendHeight?: any[];
+    canvasScale?: any[];
+    canvasCaptionOpacity?: any[];
+    canvasCaptionTranslateY?: any[];
   };
 };
 
@@ -170,37 +179,56 @@ const AirMug = () => {
             canvasCaption: document.querySelector(
               ".canvas-caption"
             ) as HTMLElement,
+            canvas: document.querySelector(".image-blend-canvas") as any,
+            imagesPaths: [
+              "/images/blend-image-1.jpg",
+              "/images/blend-image-2.jpg",
+            ],
+            images: [],
+          },
+          values: {
+            whiteBoxLeft: [0, 0, { start: 0, end: 0 }],
+            whiteBoxRight: [0, 0, { start: 0, end: 0 }],
+            blendHeight: [0, 0, { start: 0, end: 0 }],
+            canvasScale: [0, 0, { start: 0, end: 0 }],
+            rectStartY: 0,
+            canvasCaptionOpacity: [0, 1, { start: 0, end: 0 }],
+            canvasCaptionTranslateY: [20, 0, { start: 0, end: 0 }],
           },
         },
       ];
 
       const setCanvasImages = () => {
         if (
-          sceneList &&
-          Array.isArray(sceneList) &&
-          sceneList.length > 0 &&
-          sceneList[0]?.values?.videoImageCount &&
-          sceneList[0].objects.videoImages
-        ) {
-          for (let i = 0; i < sceneList[0].values.videoImageCount; i++) {
-            const imgElem = new Image();
-            imgElem.src = `/videos/001/IMG_${6726 + i}.JPG`;
-            sceneList[0].objects.videoImages.push(imgElem);
-          }
+          !sceneList ||
+          !Array.isArray(sceneList) ||
+          sceneList.length === 0 ||
+          !sceneList[0]?.values?.videoImageCount ||
+          !sceneList[0].objects.videoImages ||
+          !sceneList[2]?.values?.videoImageCount ||
+          !sceneList[2].objects.videoImages ||
+          !sceneList[3].objects.imagesPaths ||
+          sceneList[3].objects.imagesPaths.length === 0 ||
+          !sceneList[3].objects.images
+        )
+          return;
+
+        for (let i = 0; i < sceneList[0].values.videoImageCount; i++) {
+          const imgElem = new Image();
+          imgElem.src = `/videos/001/IMG_${6726 + i}.JPG`;
+          sceneList[0].objects.videoImages.push(imgElem);
         }
 
-        if (
-          sceneList &&
-          Array.isArray(sceneList) &&
-          sceneList.length > 0 &&
-          sceneList[2]?.values?.videoImageCount &&
-          sceneList[2].objects.videoImages
-        ) {
-          for (let i = 0; i < sceneList[2].values.videoImageCount; i++) {
-            const imgElem = new Image();
-            imgElem.src = `/videos/002/IMG_${7027 + i}.JPG`;
-            sceneList[2].objects.videoImages.push(imgElem);
-          }
+        for (let i = 0; i < sceneList[2].values.videoImageCount; i++) {
+          const imgElem = new Image();
+          imgElem.src = `/videos/002/IMG_${7027 + i}.JPG`;
+          sceneList[2].objects.videoImages.push(imgElem);
+        }
+
+        for (let i = 0; i < sceneList[3].objects.imagesPaths.length; i++) {
+          const imgElem = new Image();
+          imgElem.src = sceneList[3].objects.imagesPaths[i];
+          sceneList[3].objects.images.push(imgElem);
         }
       };
 
@@ -278,7 +306,7 @@ const AirMug = () => {
         const currentYOffset = yOffset - prevScrollHeight;
         const scrollRatio = currentYOffset / scrollHeight;
 
-        if (!objects || !values) return;
+        if (!objects || !values || !document.body) return;
 
         switch (currentScene) {
           case 0:
@@ -540,9 +568,251 @@ const AirMug = () => {
                 )})`;
               }
             }
+
+            // section3이 갑툭튀 하기 때문에 section2에서 미리 로드를 시켜야함.
+            if (scrollRatio > 0.9) {
+              const object = sceneList.length > 2 && sceneList[2].objects;
+              const values = sceneList.length > 2 && sceneList[2].values;
+
+              if (
+                !object ||
+                !values ||
+                !objects.canvas ||
+                !objects.images ||
+                objects.images.length === 0 ||
+                !values.whiteBoxLeft ||
+                !values.whiteBoxRight
+              )
+                return;
+
+              const { canvas } = objects;
+              const { whiteBoxLeft, whiteBoxRight } = values;
+
+              // 캔버스의 Scale 값 구하기 시작
+              const widthRatio = window.innerWidth / canvas.width;
+              const heightRatio = window.innerHeight / canvas.height;
+
+              // 캔버스보다 브라우저 창이 홀쭉하면 heightRatio, 아니면 widthRatio로 세팅
+              const canvasScaleRatio =
+                widthRatio <= heightRatio ? heightRatio : widthRatio;
+              canvas.style.transform = `scale(${canvasScaleRatio})`;
+
+              // 캔버스에 첫번째 이미지 (blend-image-1.jpg) 그려주기
+              const context = objects.canvas.getContext("2d");
+              context.drawImage(objects.images[0], 0, 0);
+              context.fillStyle = "white";
+
+              // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+              // window.innerWidth는 스크롤 값을 뺀 너비임. 그래서 약간 안맞아서 body의 너비로 변경.
+              const reCalcInnerWidth =
+                document.body.offsetWidth / canvasScaleRatio;
+              const reCalcInnerHeight =
+                document.body.offsetHeight / canvasScaleRatio;
+
+              // 좌, 우 흰색 박스의 크기
+              const whiteRectWidth = reCalcInnerWidth * 0.15;
+
+              // 좌, 우 흰색 박스의 영역 계산
+              whiteBoxLeft[0] = (canvas.width - reCalcInnerWidth) / 2;
+              whiteBoxLeft[1] = whiteBoxLeft[0] - whiteRectWidth;
+              whiteBoxRight[0] =
+                whiteBoxLeft[0] + reCalcInnerWidth - whiteRectWidth;
+              whiteBoxRight[1] = whiteBoxRight[0] + whiteRectWidth;
+
+              // 좌, 우 흰색 박스 그리기 (x, y, width, height)
+              context.fillRect(
+                parseInt(values.whiteBoxLeft[0]),
+                0,
+                parseInt(whiteRectWidth.toString()),
+                reCalcInnerHeight
+              );
+              context.fillRect(
+                parseInt(values.whiteBoxRight[0]),
+                0,
+                parseInt(whiteRectWidth.toString()),
+                reCalcInnerHeight
+              );
+            }
+
             break;
           case 3:
-            // animationCalcValues();
+            if (
+              !objects.canvas ||
+              !objects.images ||
+              objects.images.length < 2 ||
+              !objects.canvasCaption ||
+              !values.whiteBoxLeft ||
+              !values.whiteBoxRight ||
+              !values.blendHeight ||
+              !values.canvasScale ||
+              !values.canvasCaptionOpacity ||
+              !values.canvasCaptionTranslateY
+            )
+              return;
+
+            // section 3은 기능이 많아서 총 3개의 스텝으로 나눔
+            // step1: 이미지가 나타나고 커지는 단계 (윈도우 상단에 닿을 때까지)
+            // step2: 이미지가 다 커진 후, fixed되며 하단의 블랜딩 이미지가 나타나는 단계 (패럴랙스 스크롤)
+            // step3: 블랜딩 이미지가 작아지면서 다시 일반 스크롤이 되는 단계
+            let step = 0;
+
+            const { canvas } = objects;
+            const { whiteBoxLeft, whiteBoxRight } = values;
+
+            // 캔버스의 Scale 값 구하기 시작
+            const widthRatio = window.innerWidth / canvas.width;
+            const heightRatio = window.innerHeight / canvas.height;
+
+            // 캔버스보다 브라우저 창이 홀쭉하면 heightRatio, 아니면 widthRatio로 세팅
+            const canvasScaleRatio =
+              widthRatio <= heightRatio ? heightRatio : widthRatio;
+            canvas.style.transform = `scale(${canvasScaleRatio})`;
+
+            // 캔버스에 첫번째 이미지 (blend-image-1.jpg) 그려주기
+            const context = objects.canvas.getContext("2d");
+            context.drawImage(objects.images[0], 0, 0);
+            context.fillStyle = "white";
+
+            // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+            // window.innerWidth는 스크롤 값을 뺀 너비임. 그래서 약간 안맞아서 body의 너비로 변경.
+            const reCalcInnerWidth =
+              document.body.offsetWidth / canvasScaleRatio;
+            const reCalcInnerHeight =
+              document.body.offsetHeight / canvasScaleRatio;
+
+            // 이미지가 화면 제일 윗부분에 닿는 지점까지의 거리 계산
+            if (!values.rectStartY) {
+              const rectStartY =
+                canvas.offsetTop +
+                (canvas.height - canvas.height * canvasScaleRatio) / 2;
+              values.rectStartY = rectStartY;
+              values.whiteBoxLeft[2].start =
+                window.innerHeight / 2 / scrollHeight;
+              values.whiteBoxRight[2].start =
+                window.innerHeight / 2 / scrollHeight;
+              values.whiteBoxLeft[2].end = rectStartY / scrollHeight;
+              values.whiteBoxRight[2].end = rectStartY / scrollHeight;
+            }
+
+            // 좌, 우 흰색 박스의 크기
+            const whiteRectWidth = reCalcInnerWidth * 0.15;
+
+            // 좌, 우 흰색 박스의 영역 계산
+            whiteBoxLeft[0] = (canvas.width - reCalcInnerWidth) / 2;
+            whiteBoxLeft[1] = whiteBoxLeft[0] - whiteRectWidth;
+            whiteBoxRight[0] =
+              whiteBoxLeft[0] + reCalcInnerWidth - whiteRectWidth;
+            whiteBoxRight[1] = whiteBoxRight[0] + whiteRectWidth;
+
+            // 좌, 우 흰색 박스 그리기 (x, y, width, height)
+            context.fillRect(
+              parseInt(
+                animationCalcValues(values.whiteBoxLeft, currentYOffset)
+              ),
+              0,
+              parseInt(whiteRectWidth.toString()),
+              reCalcInnerHeight
+            );
+            context.fillRect(
+              parseInt(
+                animationCalcValues(values.whiteBoxRight, currentYOffset)
+              ),
+              0,
+              parseInt(whiteRectWidth.toString()),
+              reCalcInnerHeight
+            );
+
+            if (scrollRatio < values.whiteBoxLeft[2].end) {
+              // 캔버스가 브라우저 상단에 닿지 않았다면 step1
+              step = 1;
+              canvas.classList.remove("sticky");
+            } else {
+              // 아니라면 step2
+              step = 2;
+
+              // 블렌딩 효과 끝난 후, 스크롤 내린만큼 marginTop을 주기 위한 변수
+              const marginTopPer = 0.4;
+
+              // 블렌딩 값 설정
+              values.blendHeight[0] = 0;
+              values.blendHeight[1] = canvas.height;
+              values.blendHeight[2].start = values.whiteBoxLeft[2].end;
+              values.blendHeight[2].end =
+                values.whiteBoxLeft[2].end + marginTopPer / 2;
+
+              const blendHeight = animationCalcValues(
+                values.blendHeight,
+                currentYOffset
+              );
+
+              // 블렌딩 이미지 그리기
+              context.drawImage(
+                objects.images[1],
+                0,
+                canvas.height - blendHeight,
+                canvas.width,
+                blendHeight,
+                0,
+                canvas.height - blendHeight,
+                canvas.width,
+                blendHeight
+              );
+
+              // 블렌딩 이미지를 fixed로 설정 후 스크롤 값에 따라서 천천히 올려주는 작업
+              canvas.classList.add("sticky");
+              canvas.style.top = `-${
+                (canvas.height - canvas.height * canvasScaleRatio) / 2
+              }px`;
+
+              // 블렌딩 이미직가 다 올라왔으면, 축소 시켜주는 작업
+              if (scrollRatio > values.blendHeight[2].end) {
+                values.canvasScale[0] = canvasScaleRatio;
+                values.canvasScale[1] =
+                  document.body.offsetWidth / (1.5 * canvas.width);
+                values.canvasScale[2].start = values.blendHeight[2].end;
+                values.canvasScale[2].end =
+                  values.canvasScale[2].start + marginTopPer / 2;
+
+                canvas.style.transform = `scale(${animationCalcValues(
+                  values.canvasScale,
+                  currentYOffset
+                )})`;
+
+                canvas.style.marginTop = 0;
+              }
+
+              // 축소가 다 끝났으면 marginTop을 줘서 하단의 이미지가 보여지게꿈 해준다
+              // 추가로 sticky 클래스를 지워서 position이 fixed인 것을 지워준다.
+              if (
+                scrollRatio > values.canvasScale[2].end &&
+                values.canvasScale[2].end > 0
+              ) {
+                canvas.classList.remove("sticky");
+                canvas.style.marginTop = `${scrollHeight * marginTopPer}px`;
+
+                // 하단 문구 애니메이션 적용 (opacity, translateY)
+                values.canvasCaptionOpacity[2].start =
+                  values.canvasScale[2].end;
+                values.canvasCaptionOpacity[2].end =
+                  values.canvasScale[2].end + 0.1;
+
+                values.canvasCaptionTranslateY[2].start =
+                  values.canvasScale[2].end;
+                values.canvasCaptionTranslateY[2].end =
+                  values.canvasScale[2].end + 0.1;
+
+                objects.canvasCaption.style.opacity = animationCalcValues(
+                  values.canvasCaptionOpacity,
+                  currentYOffset
+                );
+
+                objects.canvasCaption.style.transform = `translate3d(0,${animationCalcValues(
+                  values.canvasCaptionTranslateY,
+                  currentYOffset
+                )}%,0)`;
+              }
+            }
+
             break;
         }
       };
@@ -698,6 +968,7 @@ const AirMug = () => {
           <br />
           아름답고 부드러운 음료 공간.
         </p>
+        <canvas className="image-blend-canvas" width="1920" height="1080" />
         <p className="canvas-caption">
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eveniet at
           fuga quae perspiciatis veniam impedit et, ratione est optio porro.

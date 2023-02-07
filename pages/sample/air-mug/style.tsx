@@ -125,8 +125,13 @@ export const ScrollSection = styled.section<{ sectionId: number }>`
   ${({ sectionId }) =>
     sectionId === 3 &&
     css`
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
       p.mid-message {
-        max-width: 1000px;
+        width: 1000px;
         margin: 0 auto;
         padding: 0 1rem;
         font-size: 2rem;
@@ -141,9 +146,14 @@ export const ScrollSection = styled.section<{ sectionId: number }>`
         }
       }
 
+      canvas.image-blend-canvas.sticky {
+        position: fixed;
+      }
+
       p.canvas-caption {
         max-width: 1000px;
         margin: 0 auto;
+        margin-top: -2em;
         padding: 0 1rem;
         font-size: 1.2rem;
         color: #888;
