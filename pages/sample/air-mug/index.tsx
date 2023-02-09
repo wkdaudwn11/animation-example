@@ -237,6 +237,21 @@ const AirMug = () => {
           imgElem.src = sceneList[3].objects.imagesPaths[i];
           sceneList[3].objects.images.push(imgElem);
         }
+
+        setTimeout(() => {
+          handleChangeLayout();
+          const objects = sceneList[0].objects;
+
+          if (objects && objects.canvas && objects.videoImages) {
+            const context = objects.canvas.getContext("2d");
+            context.drawImage(objects.videoImages[0], 0, 0);
+          }
+
+          setInitLoading(false);
+
+          const body = document.querySelector("body");
+          if (body) body.style.overflowY = "auto";
+        }, 500);
       };
 
       const checkMenu = () => {
@@ -881,7 +896,6 @@ const AirMug = () => {
         }
 
         rafId = requestAnimationFrame(loop);
-        console.log("loop");
 
         if (Math.abs(yOffset - delayedYOffset) < 1) {
           cancelAnimationFrame(rafId);
@@ -889,47 +903,29 @@ const AirMug = () => {
         }
       };
 
-      // DomContentLoaded -> 이미지 로딩 안기다리고 HTML DOM 로딩만 기다림
-      // load -> 이미지, HTML DOM 로딩 모두 기다림
-      // window.addEventListener("DomContentLoaded", handleChangeLayout);
-      window.addEventListener("load", () => {
-        handleChangeLayout();
-        const objects = sceneList[0].objects;
+      window.addEventListener("scroll", () => {
+        handleClear();
+        scrollLoop();
+        checkMenu();
 
-        if (objects && objects.canvas && objects.videoImages) {
-          const context = objects.canvas.getContext("2d");
-          context.drawImage(objects.videoImages[0], 0, 0);
+        if (!rafState) {
+          rafId = requestAnimationFrame(loop);
+          rafState = true;
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 900) {
+          handleChangeLayout();
         }
 
-        window.addEventListener("scroll", () => {
-          handleClear();
-          scrollLoop();
-          checkMenu();
-
-          if (!rafState) {
-            rafId = requestAnimationFrame(loop);
-            rafState = true;
-          }
-        });
-
-        window.addEventListener("resize", () => {
-          if (window.innerWidth > 900) {
-            handleChangeLayout();
-          }
-
-          if (sceneList.length > 4 && sceneList[3]?.values?.rectStartY) {
-            sceneList[3].values.rectStartY = 0;
-          }
-        });
-
-        // 가로모드, 세로모드 변경시 일어나는 이벤트
-        window.addEventListener("orientationchange", handleChangeLayout);
-
-        setInitLoading(false);
-
-        const body = document.querySelector("body");
-        if (body) body.style.overflowY = "auto";
+        if (sceneList.length > 4 && sceneList[3]?.values?.rectStartY) {
+          sceneList[3].values.rectStartY = 0;
+        }
       });
+
+      // 가로모드, 세로모드 변경시 일어나는 이벤트
+      window.addEventListener("orientationchange", handleChangeLayout);
 
       setCanvasImages();
     })();
