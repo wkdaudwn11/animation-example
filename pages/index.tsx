@@ -39,7 +39,7 @@ export default function Home() {
       </Head>
       <Layout title="Home">
         <Block>
-          <BlockTitle>Sample Site</BlockTitle>
+          <BlockTitle>Sample Site1</BlockTitle>
           <Button handleClick={() => router.push("/sample/air-mug")}>
             Air mug
           </Button>
